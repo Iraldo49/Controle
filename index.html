@@ -1,724 +1,1410 @@
 <!doctype html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Conta do Bar</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
+  <title>Controle de Dívidas - O que me Devem</title>
   <style>
-        body {
-            box-sizing: border-box;
-        }
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-    </style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100%;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .app-container {
+      width: 100%;
+      min-height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem 1rem;
+    }
+
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      color: #ffffff;
+      font-size: 2.5rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-section h2 {
+      color: #2d3748;
+      font-size: 1.5rem;
+      margin: 0 0 1.5rem 0;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      color: #4a5568;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      width: 100%;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-success {
+      background: #48bb78;
+      color: #ffffff;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background: #38a169;
+    }
+
+    .btn-warning {
+      background: #ed8936;
+      color: #ffffff;
+    }
+
+    .btn-warning:hover:not(:disabled) {
+      background: #dd6b20;
+    }
+
+    .btn-danger {
+      background: #f56565;
+      color: #ffffff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #e53e3e;
+    }
+
+    .btn-edit {
+      background: #4299e1;
+      color: #ffffff;
+    }
+
+    .btn-edit:hover:not(:disabled) {
+      background: #3182ce;
+    }
+
+    .btn-info {
+      background: #4299e1;
+      color: #ffffff;
+    }
+
+    .btn-info:hover:not(:disabled) {
+      background: #3182ce;
+    }
+
+    .total-section {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .total-section h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .total-section .amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .list-section h2 {
+      color: #2d3748;
+      font-size: 1.5rem;
+      margin: 0 0 1.5rem 0;
+      font-weight: 600;
+    }
+
+    .dividas-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .divida-item {
+      background: #f7fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      transition: all 0.2s;
+      min-height: 80px;
+    }
+
+    .divida-item:hover {
+      border-color: #cbd5e0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .divida-item.pago {
+      background: #f0fff4;
+      border-color: #9ae6b4;
+    }
+
+    .divida-item.atrasada {
+      background: #fff5f5;
+      border-color: #fc8181;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 101, 101, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(245, 101, 101, 0); }
+    }
+
+    .divida-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .divida-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .divida-nome {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 0;
+    }
+
+    .divida-valor {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #667eea;
+      margin: 0;
+      text-align: center;
+    }
+
+    .divida-item.pago .divida-valor {
+      color: #48bb78;
+      text-decoration: line-through;
+    }
+
+    .divida-item.atrasada .divida-valor {
+      color: #f56565;
+    }
+
+    .divida-status {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .status-pendente {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    .status-pago {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+
+    .status-atrasada {
+      background: #fed7d7;
+      color: #c53030;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .divida-detalhes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: #718096;
+      font-size: 0.75rem;
+    }
+
+    .divida-detalhes span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .divida-observacoes {
+      color: #718096;
+      font-size: 0.75rem;
+      font-style: italic;
+      margin: 0;
+    }
+
+    .divida-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #718096;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.25rem;
+      color: #4a5568;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #2d3748;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+    }
+
+    .toast.warning {
+      background: #ed8936;
+    }
+
+    .toast.danger {
+      background: #f56565;
+    }
+
+    .toast.success {
+      background: #48bb78;
+    }
+
+    .toast.info {
+      background: #4299e1;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      animation: fadeIn 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #2d3748;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .notificacao-badge {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #f56565;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 999;
+      animation: pulse 2s infinite;
+    }
+
+    .prazo-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      background: #f7fafc;
+    }
+
+    .prazo-proximo {
+      background: #feebc8;
+      color: #c05621;
+    }
+
+    .prazo-atrasado {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    .prazo-normal {
+      background: #f0fff4;
+      color: #22543d;
+    }
+
+    .categoria-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-right: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .categoria-emprestimo { background: #bee3f8; color: #2c5282; }
+    .categoria-servico { background: #fed7d7; color: #c53030; }
+    .categoria-venda { background: #c6f6d5; color: #22543d; }
+    .categoria-outro { background: #e9d8fd; color: #553c9a; }
+
+    .estatisticas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .estatistica-card {
+      background: #f7fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .estatistica-valor {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+      margin: 0.5rem 0;
+    }
+
+    .estatistica-label {
+      font-size: 0.875rem;
+      color: #718096;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .divida-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .divida-valor {
+        text-align: left;
+      }
+
+      .divida-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .divida-actions button {
+        width: 100%;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 1rem;
+      }
+
+      .estatisticas-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
- <body class="h-full bg-yellow-50 font-sans">
-  <div class="min-h-full flex"><!-- Sidebar -->
-   <div class="bg-black text-yellow-400 w-64 min-h-screen fixed left-0 top-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
-    <div class="p-6">
-     <div class="mb-8">
-
-      <div class="flex items-center">
-                   <img class="w-20 h-20 rounded-full" src="img/2.png" alt="ícone de carrinho" />
-                </div>
-      <p id="welcome-message" class="text-yellow-300 text-sm mt-1">Bem-vindos ao nosso bar!</p>
-     </div>
-     <nav class="space-y-2"><button id="btn-nova-conta" class="w-full flex items-center px-4 py-3 text-left bg-yellow-500 text-black rounded-lg font-medium hover:bg-yellow-600 transition-colors">
-       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-       </svg> Nova Conta </button> <button id="btn-contas-ativas" class="w-full flex items-center px-4 py-3 text-left text-yellow-400 hover:bg-gray-800 rounded-lg font-medium transition-colors">
-       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-       </svg> Contas Ativas </button> <button id="btn-historico" class="w-full flex items-center px-4 py-3 text-left text-yellow-400 hover:bg-gray-800 rounded-lg font-medium transition-colors">
-       <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-       </svg> Histórico </button>
-     </nav>
-    </div>
-   </div><!-- Overlay para mobile -->
-   <div class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden" id="sidebar-overlay"></div><!-- Conteúdo Principal -->
-   <div class="flex-1 lg:ml-64"><!-- Header Mobile -->
-    <header class="bg-white shadow-sm lg:hidden">
-     <div class="flex items-center justify-between px-4 py-3"><button id="menu-toggle" class="text-gray-600 hover:text-gray-900">
-       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-       </svg></button>
-        <div class="flex items-center">
-    <img class="w-10 h-10 rounded-full" src="img/2.png" alt="ícone de carrinho" />
-</div>
-
-      <div class="w-6"></div>
-     </div>
+ <body>
+  <div class="app-container">
+   <div class="content-wrapper">
+    <header class="header">
+     <h1 id="titulo-principal">💰 Dívidas a Receber</h1>
+     <p style="color: rgba(255,255,255,0.8); margin: 0;">Controle do que as pessoas te devem</p>
     </header>
-    <main class="p-4 lg:p-8"><!-- Seção Nova Conta -->
-     <div id="secao-nova-conta" class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-black mb-4 sm:mb-6">Abrir Nova Conta</h2>
-      <form id="form-nova-conta" class="space-y-4">
-       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div><label for="cliente-nome" class="block text-sm font-medium text-gray-700 mb-2">Nome do Cliente</label> <input type="text" id="cliente-nome" required class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base">
-        </div>
-        <div><label for="mesa-numero" class="block text-sm font-medium text-gray-700 mb-2">Mesa</label> <input type="text" id="mesa-numero" required class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base">
-        </div>
-       </div><button type="submit" id="btn-abrir-conta" class="w-full bg-yellow-500 text-black py-3 px-4 rounded-md hover:bg-yellow-600 font-medium transition-colors text-base"> Abrir Conta </button>
-      </form>
-     </div><!-- Seção Contas Ativas -->
-     <div id="secao-contas-ativas" class="hidden">
-      <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-8">
-       <h2 class="text-xl sm:text-2xl font-bold text-black mb-4 sm:mb-6">Contas Ativas</h2>
-       <div id="lista-contas-ativas" class="space-y-4"><!-- Contas ativas serão inseridas aqui -->
-       </div>
+    
+    <!-- Botão de notificações -->
+    <div id="notificacao-badge" class="notificacao-badge" style="display: none;" onclick="mostrarNotificacoes()">0</div>
+    
+    <!-- Estatísticas -->
+    <div class="card">
+      <h2>📊 Resumo Financeiro</h2>
+      <div class="estatisticas-grid" id="estatisticas-container">
+        <!-- Será preenchido pelo JavaScript -->
       </div>
-     </div><!-- Seção Histórico -->
-     <div id="secao-historico" class="hidden">
-      <div class="bg-white rounded-lg shadow-md p-4 sm:p-6">
-       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
-        <h2 class="text-xl sm:text-2xl font-bold text-black">Histórico de Contas</h2><button id="btn-limpar-historico" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors font-medium text-sm sm:text-base"> Limpar Histórico </button>
+    </div>
+    
+    <div class="card form-section">
+     <h2>➕ Adicionar Nova Dívida</h2>
+     <form id="form-devedor">
+      <div class="form-grid">
+       <div class="form-group"><label for="input-nome">Nome do Devedor</label> <input type="text" id="input-nome" required placeholder="Ex: Maria Santos">
        </div>
-       <div id="lista-historico" class="space-y-4"><!-- Histórico será inserido aqui -->
+       <div class="form-group"><label for="input-valor">Valor que me Deve (MT)</label> <input type="number" id="input-valor" step="0.01" min="0" required placeholder="0,00">
        </div>
-      </div>
-     </div><!-- Modal de Pedidos -->
-     <div id="modal-pedidos" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-      <div class="flex items-center justify-center min-h-screen p-2 sm:p-4">
-       <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-        <div class="p-4 sm:p-6">
-         <div class="flex justify-between items-center mb-4 sm:mb-6">
-          <h3 id="modal-titulo" class="text-lg sm:text-2xl font-bold text-black">Conta - Mesa</h3><button id="btn-fechar-modal" class="text-gray-400 hover:text-gray-600 text-2xl sm:text-3xl">×</button>
-         </div><!-- Cardápio -->
-         <div class="mb-6 sm:mb-8">
-          <h4 class="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Cardápio</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" id="cardapio"><!-- Cardápio será inserido aqui -->
-          </div>
-         </div><!-- Pedidos da Conta -->
-         <div class="mb-4 sm:mb-6">
-          <h4 class="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Pedidos da Conta</h4>
-          <div id="pedidos-conta" class="bg-gray-50 rounded-lg p-3 sm:p-4 min-h-[100px]"><!-- Pedidos serão inseridos aqui -->
-          </div>
-          <div class="mt-3 sm:mt-4 text-right"><span class="text-lg sm:text-xl font-bold text-black">Total: MT <span id="total-conta">0,00</span></span>
-          </div>
-         </div><!-- Botões de Ação -->
-         <div class="flex justify-end"><button id="btn-fechar-conta" class="bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-red-700 font-medium transition-colors text-sm sm:text-base w-full sm:w-auto"> Fechar Conta </button>
-         </div>
-        </div>
+       <div class="form-group"><label for="input-categoria">Categoria da Dívida</label> 
+         <select id="input-categoria">
+           <option value="emprestimo">💰 Empréstimo de dinheiro</option>
+           <option value="servico">🔧 Serviço prestado</option>
+           <option value="venda">🛒 Venda de produto</option>
+           <option value="outro">📝 Outro</option>
+         </select>
        </div>
-      </div>
-     </div><!-- Modal de Confirmação -->
-     <div id="modal-confirmacao" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-      <div class="flex items-center justify-center min-h-screen p-4">
-       <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div class="p-4 sm:p-6">
-         <h3 id="modal-confirmacao-titulo" class="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Confirmar Fechamento</h3>
-         <p id="modal-confirmacao-texto" class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Tem certeza que deseja fechar esta conta?</p>
-         <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4"><button id="btn-cancelar-acao" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors text-sm sm:text-base order-2 sm:order-1"> Cancelar </button> <button id="btn-confirmar-acao" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm sm:text-base order-1 sm:order-2"> Confirmar </button>
-         </div>
-        </div>
+       <div class="form-group"><label for="input-data">Data da Dívida</label> <input type="date" id="input-data">
        </div>
-      </div>
+       <div class="form-group"><label for="input-prazo">Prazo para Pagar (dias)</label> <input type="number" id="input-prazo" min="1" placeholder="Ex: 15 (opcional)">
+       </div>
+       <div class="form-group full-width"><label for="input-observacoes">Detalhes/Motivo</label> <textarea id="input-observacoes" placeholder="Ex: Pagamento pelo conserto do carro, Venda do celular..."></textarea>
+       </div>
+      </div><button type="submit" class="btn btn-primary" id="btn-submit"> <span id="btn-text-adicionar">➕ Registrar Dívida</span> </button>
+     </form>
+    </div>
+    <div class="total-section">
+     <h3 id="label-total">💰 Total a Receber (Pendente)</h3>
+     <p class="amount" id="total-pendente">MT 0,00</p>
+    </div>
+    <div class="card list-section">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+       <h2>📋 Lista de Devedores</h2>
+       <button class="btn btn-small btn-info" onclick="mostrarNotificacoes()">🔔 Ver Cobranças ({notificacaoCount})</button>
      </div>
-    </main>
+     <div id="filtros" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+       <button class="btn btn-small" onclick="filtrarDividas('todos')">Todos</button>
+       <button class="btn btn-small" onclick="filtrarDividas('pendente')">Pendentes</button>
+       <button class="btn btn-small" onclick="filtrarDividas('pago')">Pagas</button>
+       <button class="btn btn-small" onclick="filtrarDividas('atrasada')">Atrasadas</button>
+       <select class="btn btn-small" onchange="filtrarPorCategoria(this.value)" style="padding: 0.5rem;">
+         <option value="">Todas Categorias</option>
+         <option value="emprestimo">Empréstimo</option>
+         <option value="servico">Serviço</option>
+         <option value="venda">Venda</option>
+         <option value="outro">Outro</option>
+       </select>
+     </div>
+     <div id="dividas-container" class="dividas-list"></div>
+    </div>
    </div>
-   <script>
-        // Configuração padrão
-        const defaultConfig = {
-            bar_name: "Sabor da Esquina",
-            welcome_message: "Bem-vindos ao nosso bar!"
-        };
-
-        // Cardápio do bar
-        const cardapio = [
-            { nome: "2M Lata", preco: 60.00 },
-            { nome: "2M media", preco: 60.00 },
-            { nome: "Impala Lata", preco: 50.00 },
-            { nome: "Impala media", preco: 50.00 },
-            { nome: "Preta curta", preco: 50.00 },
-            { nome: "Txilar", preco: 50.00 },
-            { nome: "Castle Lite", preco: 70.00 },
-            { nome: "Corona", preco: 85.00 },
-            { nome: "Savana Dry", preco: 80.00 },
-            { nome: "Savana Lemon", preco: 80.00 },
-            { nome: "Heineken Curta", preco: 80.00 },
-            { nome: "Heineken Lata", preco: 100.00 },
-            { nome: "Brutal", preco: 80.00 },
-            { nome: "Brutal Lata", preco: 100.00 },
-            { nome: "Bernine Lata", preco: 100.00 },
-            { nome: "MayFair", preco: 80.00 },
-            { nome: "Água", preco: 20.00 },
-            { nome: "Refresco Txoti", preco: 30.00 },
-            { nome: "Capy", preco: 35.00 },
-            { nome: "Água 1.5 l", preco: 40.00 },
-            { nome: "Refrigerante", preco: 25.00 },
-            { nome: "Água", preco: 80.00 },
-            { nome: "Porção de Batata (Dose)", preco: 60.00 },
-            { nome: "Porção de Batata Rachel", preco: 80.00 },
-            { nome: "Sandes Simple", preco: 70.00 },
-            { nome: "Sandes Rachel", preco: 85.00 },
-            { nome: "Hambúrguer Simple", preco: 100.00 },
-            { nome: "Hambúrguer Completo", preco: 130.00 },
-            { nome: "Hambúrguer completo com batatas", preco: 150.00 },
-            { nome: "Hambúrguer completo com batatas", preco: 170.00 },
-            { nome: "Hambúrguer Duplo", preco: 170.00 },
-            { nome: "Hambúrguer Duplo com batatas", preco: 200.00 },
-        ];
-
-        // Fallback in-memory Data SDK (used only when /_sdk/data_sdk.js is missing or fails to load)
-        // This prevents the app from throwing during initialization so navigation and UI still work.
-        if (!window.dataSdk) {
-            (function(){
-                let store = [];
-                let handler = null;
-
-                window.dataSdk = {
-                    init: async (h) => {
-                        handler = h || null;
-                        // Deliver current (empty) data set to the handler
-                        if (handler && typeof handler.onDataChanged === 'function') {
-                            try { handler.onDataChanged(store); } catch (e) { console.error('dataSdk fallback handler error', e); }
-                        }
-                        return { isOk: true };
-                    },
-                    create: async (item) => {
-                        store.push(item);
-                        if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(store);
-                        return { isOk: true };
-                    },
-                    update: async (item) => {
-                        const idx = store.findIndex(s => s.id === item.id);
-                        if (idx >= 0) store[idx] = item; else store.push(item);
-                        if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(store);
-                        return { isOk: true };
-                    },
-                    delete: async (item) => {
-                        const idx = store.findIndex(s => s.id === item.id);
-                        if (idx >= 0) store.splice(idx, 1);
-                        if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(store);
-                        return { isOk: true };
-                    }
-                };
-            })();
-        }
-
-        let contas = [];
-        let contaAtual = null;
-        let isLoading = false;
-
-        // Elementos DOM
-        const btnNovaContaNav = document.getElementById('btn-nova-conta');
-        const btnContasAtivasNav = document.getElementById('btn-contas-ativas');
-        const btnHistoricoNav = document.getElementById('btn-historico');
-        const secaoNovaConta = document.getElementById('secao-nova-conta');
-        const secaoContasAtivas = document.getElementById('secao-contas-ativas');
-        const secaoHistorico = document.getElementById('secao-historico');
-        const formNovaConta = document.getElementById('form-nova-conta');
-        const modalPedidos = document.getElementById('modal-pedidos');
-        const modalConfirmacao = document.getElementById('modal-confirmacao');
-
-        let acaoConfirmacao = null;
-
-        // Data Handler para o SDK
-        const dataHandler = {
-            onDataChanged(data) {
-                contas = data;
-                atualizarInterface();
-            }
-        };
-
-        // Inicialização
-        async function init() {
-            // Inicializar Data SDK
-            const initResult = await window.dataSdk.init(dataHandler);
-            if (!initResult.isOk) {
-                console.error("Erro ao inicializar Data SDK");
-                return;
-            }
-
-            // Inicializar Element SDK
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange: async (config) => {
-                        document.getElementById('bar-title').textContent = config.bar_name || defaultConfig.bar_name;
-                        document.getElementById('welcome-message').textContent = config.welcome_message || defaultConfig.welcome_message;
-                    },
-                    mapToCapabilities: (config) => ({
-                        recolorables: [
-                            {
-                                get: () => config.primary_color || "#d97706",
-                                set: (value) => {
-                                    config.primary_color = value;
-                                    window.elementSdk.setConfig({ primary_color: value });
-                                }
-                            }
-                        ],
-                        borderables: [],
-                        fontEditable: undefined,
-                        fontSizeable: undefined
-                    }),
-                    mapToEditPanelValues: (config) => new Map([
-                        ["bar_name", config.bar_name || defaultConfig.bar_name],
-                        ["welcome_message", config.welcome_message || defaultConfig.welcome_message]
-                    ])
-                });
-            }
-
-            configurarEventos();
-            configurarSidebar();
-            criarCardapio();
-            mostrarSecao('nova-conta');
-        }
-
-        function configurarSidebar() {
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-
-            // Toggle sidebar no mobile
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('-translate-x-full');
-                sidebarOverlay.classList.toggle('hidden');
-            });
-
-            // Fechar sidebar clicando no overlay
-            sidebarOverlay.addEventListener('click', () => {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-            });
-
-            // Fechar sidebar ao clicar em um item de navegação no mobile
-            const navButtons = [btnNovaContaNav, btnContasAtivasNav, btnHistoricoNav];
-            navButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) {
-                        sidebar.classList.add('-translate-x-full');
-                        sidebarOverlay.classList.add('hidden');
-                    }
-                });
-            });
-        }
-
-        function configurarEventos() {
-            // Navegação
-            btnNovaContaNav.addEventListener('click', () => mostrarSecao('nova-conta'));
-            btnContasAtivasNav.addEventListener('click', () => mostrarSecao('contas-ativas'));
-            btnHistoricoNav.addEventListener('click', () => mostrarSecao('historico'));
-
-            // Formulário nova conta
-            formNovaConta.addEventListener('submit', abrirNovaConta);
-
-            // Botão limpar histórico
-            document.getElementById('btn-limpar-historico').addEventListener('click', () => {
-                mostrarConfirmacao('limpar', 'Limpar Histórico', 'Tem certeza que deseja excluir todo o histórico de contas? Esta ação não pode ser desfeita.');
-            });
-
-            // Modal
-            document.getElementById('btn-fechar-modal').addEventListener('click', fecharModal);
-            document.getElementById('btn-fechar-conta').addEventListener('click', () => {
-                mostrarConfirmacao('fechar', 'Confirmar Fechamento', 'Tem certeza que deseja fechar esta conta?');
-            });
-            document.getElementById('btn-cancelar-acao').addEventListener('click', fecharConfirmacao);
-            document.getElementById('btn-confirmar-acao').addEventListener('click', confirmarAcao);
-
-            // Fechar modal clicando fora
-            modalPedidos.addEventListener('click', (e) => {
-                if (e.target === modalPedidos) fecharModal();
-            });
-            modalConfirmacao.addEventListener('click', (e) => {
-                if (e.target === modalConfirmacao) fecharConfirmacao();
-            });
-        }
-
-        function mostrarSecao(secao) {
-            // Atualizar botões de navegação
-            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
-                btn.classList.remove('bg-yellow-500', 'text-black');
-                btn.classList.add('text-yellow-400');
-            });
-
-            // Ocultar todas as seções
-            secaoNovaConta.classList.add('hidden');
-            secaoContasAtivas.classList.add('hidden');
-            secaoHistorico.classList.add('hidden');
-
-            // Mostrar seção selecionada e atualizar botão
-            switch(secao) {
-                case 'nova-conta':
-                    secaoNovaConta.classList.remove('hidden');
-                    btnNovaContaNav.classList.add('bg-yellow-500', 'text-black');
-                    btnNovaContaNav.classList.remove('text-yellow-400');
-                    break;
-                case 'contas-ativas':
-                    secaoContasAtivas.classList.remove('hidden');
-                    btnContasAtivasNav.classList.add('bg-yellow-500', 'text-black');
-                    btnContasAtivasNav.classList.remove('text-yellow-400');
-                    break;
-                case 'historico':
-                    secaoHistorico.classList.remove('hidden');
-                    btnHistoricoNav.classList.add('bg-yellow-500', 'text-black');
-                    btnHistoricoNav.classList.remove('text-yellow-400');
-                    break;
-            }
-        }
-
-        async function abrirNovaConta(e) {
-            e.preventDefault();
-            
-            if (isLoading) return;
-            
-            if (contas.length >= 999) {
-                mostrarMensagem("Limite máximo de 999 contas atingido. Feche algumas contas primeiro.", "error");
-                return;
-            }
-
-            const nomeCliente = document.getElementById('cliente-nome').value.trim();
-            const mesa = document.getElementById('mesa-numero').value.trim();
-
-            if (!nomeCliente || !mesa) return;
-
-            setLoading(true);
-
-            const novaConta = {
-                id: Date.now().toString(),
-                cliente_nome: nomeCliente,
-                mesa: mesa,
-                status: "ativa",
-                total: 0,
-                data_abertura: new Date().toISOString(),
-                data_fechamento: "",
-                pedidos: JSON.stringify([])
-            };
-
-            const result = await window.dataSdk.create(novaConta);
-            
-            if (result.isOk) {
-                formNovaConta.reset();
-                mostrarMensagem("Conta aberta com sucesso!", "success");
-                mostrarSecao('contas-ativas');
-            } else {
-                mostrarMensagem("Erro ao abrir conta. Tente novamente.", "error");
-            }
-
-            setLoading(false);
-        }
-
-        function criarCardapio() {
-            const cardapioContainer = document.getElementById('cardapio');
-            cardapioContainer.innerHTML = '';
-
-            cardapio.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'bg-gray-50 p-4 rounded-lg border hover:bg-gray-100 transition-colors';
-                itemDiv.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <h5 class="font-medium text-gray-800 text-sm sm:text-base">${item.nome}</h5>
-                        <span class="text-amber-600 font-bold text-sm sm:text-base">MT ${item.preco.toFixed(2)}</span>
-                    </div>
-                    <button onclick="adicionarPedido('${item.nome}', ${item.preco})" 
-                            class="w-full bg-yellow-500 text-black py-2 px-3 sm:px-4 rounded-md hover:bg-yellow-600 transition-colors text-xs sm:text-sm">
-                        Adicionar
-                    </button>
-                `;
-                cardapioContainer.appendChild(itemDiv);
-            });
-        }
-
-        async function adicionarPedido(nome, preco) {
-            if (!contaAtual || isLoading) return;
-
-            setLoading(true);
-
-            const pedidosAtuais = JSON.parse(contaAtual.pedidos || '[]');
-            const novoPedido = {
-                id: Date.now().toString(),
-                nome: nome,
-                preco: preco,
-                horario: new Date().toLocaleTimeString('pt-BR')
-            };
-
-            pedidosAtuais.push(novoPedido);
-            const novoTotal = pedidosAtuais.reduce((sum, pedido) => sum + pedido.preco, 0);
-
-            const contaAtualizada = {
-                ...contaAtual,
-                pedidos: JSON.stringify(pedidosAtuais),
-                total: novoTotal
-            };
-
-            const result = await window.dataSdk.update(contaAtualizada);
-            
-            if (!result.isOk) {
-                mostrarMensagem("Erro ao adicionar pedido. Tente novamente.", "error");
-            }
-
-            setLoading(false);
-        }
-
-        function abrirModalPedidos(conta) {
-            contaAtual = conta;
-            document.getElementById('modal-titulo').textContent = `${conta.cliente_nome} - Mesa ${conta.mesa}`;
-            atualizarPedidosConta();
-            modalPedidos.classList.remove('hidden');
-        }
-
-        function atualizarPedidosConta() {
-            if (!contaAtual) return;
-
-            const pedidos = JSON.parse(contaAtual.pedidos || '[]');
-            const container = document.getElementById('pedidos-conta');
-            
-            if (pedidos.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum pedido ainda</p>';
-            } else {
-                container.innerHTML = pedidos.map(pedido => `
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
-                        <div class="flex-1 min-w-0">
-                            <span class="font-medium text-sm sm:text-base block">${pedido.nome}</span>
-                            <span class="text-xs sm:text-sm text-gray-500">${pedido.horario}</span>
-                        </div>
-                        <span class="font-bold text-amber-600 text-sm sm:text-base ml-2">MT ${pedido.preco.toFixed(2)}</span>
-                    </div>
-                `).join('');
-            }
-
-            document.getElementById('total-conta').textContent = contaAtual.total.toFixed(2);
-        }
-
-        function mostrarConfirmacao(acao, titulo, texto) {
-            acaoConfirmacao = acao;
-            document.getElementById('modal-confirmacao-titulo').textContent = titulo;
-            document.getElementById('modal-confirmacao-texto').textContent = texto;
-            modalConfirmacao.classList.remove('hidden');
-        }
-
-        function fecharConfirmacao() {
-            modalConfirmacao.classList.add('hidden');
-            acaoConfirmacao = null;
-        }
-
-        async function confirmarAcao() {
-            if (!acaoConfirmacao || isLoading) return;
-
-            setLoading(true);
-
-            if (acaoConfirmacao === 'fechar') {
-                await confirmarFechamento();
-            } else if (acaoConfirmacao === 'limpar') {
-                await limparHistorico();
-            }
-
-            setLoading(false);
-        }
-
-        async function confirmarFechamento() {
-            if (!contaAtual) return;
-
-            const contaFechada = {
-                ...contaAtual,
-                status: "fechada",
-                data_fechamento: new Date().toISOString()
-            };
-
-            const result = await window.dataSdk.update(contaFechada);
-            
-            if (result.isOk) {
-                mostrarMensagem("Conta fechada com sucesso!", "success");
-                fecharModal();
-                fecharConfirmacao();
-                mostrarSecao('historico');
-            } else {
-                mostrarMensagem("Erro ao fechar conta. Tente novamente.", "error");
-            }
-        }
-
-        async function limparHistorico() {
-            const contasFechadas = contas.filter(conta => conta.status === 'fechada');
-            
-            let sucessos = 0;
-            let erros = 0;
-
-            for (const conta of contasFechadas) {
-                const result = await window.dataSdk.delete(conta);
-                if (result.isOk) {
-                    sucessos++;
-                } else {
-                    erros++;
-                }
-            }
-
-            fecharConfirmacao();
-
-            if (erros === 0) {
-                mostrarMensagem(`Histórico limpo com sucesso! ${sucessos} contas removidas.`, "success");
-            } else {
-                mostrarMensagem(`Histórico parcialmente limpo. ${sucessos} contas removidas, ${erros} erros.`, "error");
-            }
-        }
-
-        function fecharModal() {
-            modalPedidos.classList.add('hidden');
-            contaAtual = null;
-        }
-
-        function atualizarInterface() {
-            atualizarContasAtivas();
-            atualizarHistorico();
-            if (contaAtual) {
-                // Atualizar conta atual se o modal estiver aberto
-                const contaAtualizadaData = contas.find(c => c.id === contaAtual.id);
-                if (contaAtualizadaData) {
-                    contaAtual = contaAtualizadaData;
-                    atualizarPedidosConta();
-                }
-            }
-        }
-
-        function atualizarContasAtivas() {
-            const container = document.getElementById('lista-contas-ativas');
-            const contasAtivas = contas.filter(conta => conta.status === 'ativa');
-
-            if (contasAtivas.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhuma conta ativa no momento</p>';
-                return;
-            }
-
-            container.innerHTML = contasAtivas.map(conta => `
-                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-base sm:text-lg text-gray-800">${conta.cliente_nome}</h3>
-                            <p class="text-gray-600 text-sm sm:text-base">Mesa ${conta.mesa}</p>
-                            <p class="text-xs sm:text-sm text-gray-500">Aberta em: ${new Date(conta.data_abertura).toLocaleString('pt-BR')}</p>
-                        </div>
-                        <div class="flex flex-row sm:flex-col sm:text-right items-center sm:items-end justify-between sm:justify-start">
-                            <p class="text-xl sm:text-2xl font-bold text-black">MT ${conta.total.toFixed(2)}</p>
-                            <button onclick="abrirModalPedidos(${JSON.stringify(conta).replace(/"/g, '&quot;')})" 
-                                    class="bg-yellow-500 text-black px-3 sm:px-4 py-2 rounded-md hover:bg-yellow-600 transition-colors text-sm sm:text-base sm:mt-2">
-                                Ver Conta
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function atualizarHistorico() {
-            const container = document.getElementById('lista-historico');
-            const contasFechadas = contas.filter(conta => conta.status === 'fechada')
-                                         .sort((a, b) => new Date(b.data_fechamento) - new Date(a.data_fechamento));
-
-            if (contasFechadas.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhuma conta no histórico</p>';
-                return;
-            }
-
-            container.innerHTML = contasFechadas.map(conta => {
-                const pedidos = JSON.parse(conta.pedidos || '[]');
-                return `
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-2 sm:space-y-0">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-base sm:text-lg text-gray-800">${conta.cliente_nome}</h3>
-                                <p class="text-gray-600 text-sm sm:text-base">Mesa ${conta.mesa}</p>
-                                <p class="text-xs sm:text-sm text-gray-500">Fechada em: ${new Date(conta.data_fechamento).toLocaleString('pt-BR')}</p>
-                            </div>
-                            <div class="text-left sm:text-right">
-                                <p class="text-xl sm:text-2xl font-bold text-green-600">MT ${conta.total.toFixed(2)}</p>
-                            </div>
-                        </div>
-                        ${pedidos.length > 0 ? `
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <h4 class="font-medium text-gray-700 mb-2 text-sm sm:text-base">Pedidos:</h4>
-                                ${pedidos.map(pedido => `
-                                    <div class="flex justify-between text-xs sm:text-sm py-1">
-                                        <span>${pedido.nome}</span>
-                                        <span>MT ${pedido.preco.toFixed(2)}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function setLoading(loading) {
-            isLoading = loading;
-            const elements = document.querySelectorAll('button, input');
-            elements.forEach(el => {
-                if (loading) {
-                    el.classList.add('loading');
-                } else {
-                    el.classList.remove('loading');
-                }
-            });
-        }
-
-        function mostrarMensagem(texto, tipo) {
-            const mensagem = document.createElement('div');
-            mensagem.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 ${
-                tipo === 'success' ? 'bg-green-600' : 'bg-red-600'
-            }`;
-            mensagem.textContent = texto;
-            
-            document.body.appendChild(mensagem);
-            
-            setTimeout(() => {
-                mensagem.remove();
-            }, 3000);
-        }
-
-        // Inicializar quando a página carregar
-        document.addEventListener('DOMContentLoaded', init);
-
-  // Fallback in-memory Data SDK (agora com armazenamento no navegador)
-if (!window.dataSdk) {
-    (function(){
-        let store = JSON.parse(localStorage.getItem("contasBar")) || [];
-        let handler = null;
-
-        function salvar() {
-            localStorage.setItem("contasBar", JSON.stringify(store));
-        }
-
-        window.dataSdk = {
-            init: async (h) => {
-                handler = h || null;
-
-                // Enviar dados armazenados para a interface
-                if (handler && typeof handler.onDataChanged === 'function') {
-                    try { handler.onDataChanged(store); } catch (e) {}
-                }
-                return { isOk: true };
-            },
-            create: async (item) => {
-                store.push(item);
-                salvar();
-                if (handler?.onDataChanged) handler.onDataChanged(store);
-                return { isOk: true };
-            },
-            update: async (item) => {
-                const idx = store.findIndex(s => s.id === item.id);
-                if (idx >= 0) store[idx] = item;
-                else store.push(item);
-                salvar();
-                if (handler?.onDataChanged) handler.onDataChanged(store);
-                return { isOk: true };
-            },
-            delete: async (item) => {
-                const idx = store.findIndex(s => s.id === item.id);
-                if (idx >= 0) store.splice(idx, 1);
-                salvar();
-                if (handler?.onDataChanged) handler.onDataChanged(store);
-                return { isOk: true };
-            }
-        };
-    })();
-}
-
-
-    </script>
   </div>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99f9bc6677257394',t:'MTc2MzMyNDkxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 
+  <!-- Modal de Notificações -->
+  <div id="modal-notificacoes" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔔 Cobranças Pendentes</h2>
+        <button class="close-modal" onclick="fecharModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-notificacoes-body">
+        <!-- Conteúdo das notificações será inserido aqui -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="fecharModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'dividas_a_receber';
+    let currentRecordCount = 0;
+    let dividas = [];
+    let editingId = null;
+    let lembreteInterval;
+    let filtroAtual = 'todos';
+    let categoriaFiltro = '';
+
+    // Solicitar permissão para notificações
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    // Funções para gerenciar localStorage
+    function carregarDividas() {
+      const dados = localStorage.getItem(STORAGE_KEY);
+      if (dados) {
+        dividas = JSON.parse(dados);
+        currentRecordCount = dividas.length;
+      } else {
+        dividas = [];
+        currentRecordCount = 0;
+      }
+      renderDividas();
+      calcularTotal();
+      atualizarEstatisticas();
+      verificarPrazos();
+      iniciarVerificacaoPrazos();
+    }
+
+    function salvarDividas() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dividas));
+      currentRecordCount = dividas.length;
+      renderDividas();
+      calcularTotal();
+      atualizarEstatisticas();
+      verificarPrazos();
+    }
+
+    function atualizarEstatisticas() {
+      const container = document.getElementById('estatisticas-container');
+      
+      const totalPendente = dividas
+        .filter(d => d.status === 'pendente')
+        .reduce((sum, d) => sum + d.valor, 0);
+      
+      const totalRecebido = dividas
+        .filter(d => d.status === 'pago')
+        .reduce((sum, d) => sum + d.valor, 0);
+      
+      const totalGeral = dividas.reduce((sum, d) => sum + d.valor, 0);
+      
+      const devedoresPendentes = dividas.filter(d => d.status === 'pendente').length;
+      const devedoresAtrasados = dividas.filter(d => d.atrasada).length;
+      
+      container.innerHTML = `
+        <div class="estatistica-card">
+          <p class="estatistica-label">💰 A Receber</p>
+          <p class="estatistica-valor">MT ${totalPendente.toFixed(2).replace('.', ',')}</p>
+        </div>
+        <div class="estatistica-card">
+          <p class="estatistica-label">✅ Recebido</p>
+          <p class="estatistica-valor">MT ${totalRecebido.toFixed(2).replace('.', ',')}</p>
+        </div>
+        <div class="estatistica-card">
+          <p class="estatistica-label">👤 Devedores</p>
+          <p class="estatistica-valor">${devedoresPendentes}</p>
+          ${devedoresAtrasados > 0 ? `<p style="color: #f56565; font-size: 0.75rem; margin: 0;">(${devedoresAtrasados} atrasados)</p>` : ''}
+        </div>
+        <div class="estatistica-card">
+          <p class="estatistica-label">📊 Total Geral</p>
+          <p class="estatistica-valor">MT ${totalGeral.toFixed(2).replace('.', ',')}</p>
+        </div>
+      `;
+    }
+
+    function iniciarVerificacaoPrazos() {
+      // Verificar prazos a cada 1 minuto
+      if (lembreteInterval) {
+        clearInterval(lembreteInterval);
+      }
+      lembreteInterval = setInterval(verificarPrazos, 60000); // 1 minuto
+    }
+
+    function verificarPrazos() {
+      const agora = new Date();
+      let notificacoesCount = 0;
+      const notificacoes = [];
+
+      dividas.forEach(divida => {
+        if (divida.status !== 'pago' && divida.data && divida.prazo) {
+          const dataDivida = new Date(divida.data);
+          const dataVencimento = new Date(dataDivida);
+          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
+          
+          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
+          
+          // Se está atrasada
+          if (diasAtraso > 0) {
+            divida.atrasada = true;
+            divida.diasAtraso = diasAtraso;
+            notificacoesCount++;
+            
+            // Criar notificação para dívida atrasada
+            notificacoes.push({
+              tipo: 'atrasada',
+              titulo: `⏰ Dívida Atrasada: ${divida.nome}`,
+              mensagem: `${divida.nome} te deve MT ${divida.valor.toFixed(2)} e está atrasada há ${diasAtraso} dia(s).`,
+              dividaId: divida.id
+            });
+          }
+          // Se vence em até 3 dias
+          else if (diasAtraso >= -3 && diasAtraso < 0) {
+            divida.proximoVencimento = true;
+            divida.diasRestantes = Math.abs(diasAtraso);
+            notificacoesCount++;
+            
+            // Criar notificação para vencimento próximo
+            notificacoes.push({
+              tipo: 'proximo',
+              titulo: `⚠️ Vencimento Próximo: ${divida.nome}`,
+              mensagem: `${divida.nome} deve te pagar MT ${divida.valor.toFixed(2)} em ${Math.abs(diasAtraso)} dia(s).`,
+              dividaId: divida.id
+            });
+          }
+        }
+      });
+
+      // Atualizar badge de notificações
+      const badge = document.getElementById('notificacao-badge');
+      if (notificacoesCount > 0) {
+        badge.textContent = notificacoesCount;
+        badge.style.display = 'flex';
+        
+        // Atualizar contador no botão
+        const botoesNotificacao = document.querySelectorAll('[onclick*="mostrarNotificacoes"]');
+        botoesNotificacao.forEach(botao => {
+          if (botao.textContent.includes('(')) {
+            botao.textContent = botao.textContent.replace(/\(\d+\)/, `(${notificacoesCount})`);
+          } else {
+            botao.textContent += ` (${notificacoesCount})`;
+          }
+        });
+      } else {
+        badge.style.display = 'none';
+        // Remover contador dos botões
+        const botoesNotificacao = document.querySelectorAll('[onclick*="mostrarNotificacoes"]');
+        botoesNotificacao.forEach(botao => {
+          botao.textContent = botao.textContent.replace(/ \(\d+\)/, '');
+        });
+      }
+
+      // Mostrar notificação do navegador se houver notificações atrasadas
+      if (notificacoes.length > 0 && 'Notification' in window && Notification.permission === 'granted') {
+        notificacoes.forEach(notif => {
+          if (notif.tipo === 'atrasada') {
+            new Notification(notif.titulo, {
+              body: notif.mensagem,
+              icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
+            });
+          }
+        });
+      }
+
+      return notificacoes;
+    }
+
+    async function init() {
+      carregarDividas();
+      
+      const form = document.getElementById('form-devedor');
+      form.addEventListener('submit', handleSubmit);
+    }
+
+    function getNomeCategoria(codigo) {
+      const categorias = {
+        'emprestimo': '💰 Empréstimo',
+        'servico': '🔧 Serviço',
+        'venda': '🛒 Venda',
+        'outro': '📝 Outro'
+      };
+      return categorias[codigo] || codigo;
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('input-nome').value.trim();
+      const valor = parseFloat(document.getElementById('input-valor').value);
+      const categoria = document.getElementById('input-categoria').value;
+      const data = document.getElementById('input-data').value;
+      const prazo = document.getElementById('input-prazo').value;
+      const observacoes = document.getElementById('input-observacoes').value;
+
+      // Validação básica
+      if (!nome || isNaN(valor) || valor <= 0) {
+        showToast("Por favor, preencha o nome e um valor válido!", 'warning');
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text-adicionar');
+      const originalText = btnText.textContent;
+
+      btnSubmit.disabled = true;
+      btnText.innerHTML = '<span class="loading-spinner"></span>';
+
+      // Pequeno delay para mostrar o spinner
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      try {
+        // Verificar se já existe uma dívida com o mesmo nome (case-insensitive)
+        const devedorExistente = dividas.find(d => 
+          d.nome.toLowerCase() === nome.toLowerCase() && d.id !== editingId
+        );
+
+        if (devedorExistente) {
+          // Atualizar dívida existente somando o valor
+          devedorExistente.valor += valor;
+          devedorExistente.categoria = categoria || devedorExistente.categoria;
+          devedorExistente.data = data || devedorExistente.data;
+          devedorExistente.prazo = prazo || devedorExistente.prazo;
+          devedorExistente.observacoes = observacoes || devedorExistente.observacoes;
+          devedorExistente.status = "pendente"; // Reativar se estava pago
+          delete devedorExistente.atrasada;
+          delete devedorExistente.proximoVencimento;
+
+          salvarDividas();
+          showToast(`${nome} já te devia! Valor atualizado para MT ${devedorExistente.valor.toFixed(2)}`, 'success');
+          document.getElementById('form-devedor').reset();
+          if (editingId) cancelEdit();
+        } else if (editingId) {
+          // Editando uma dívida existente
+          const divida = dividas.find(d => d.id === editingId);
+          if (divida) {
+            divida.nome = nome;
+            divida.valor = valor;
+            divida.categoria = categoria;
+            divida.data = data;
+            divida.prazo = prazo;
+            divida.observacoes = observacoes;
+            delete divida.atrasada;
+            delete divida.proximoVencimento;
+
+            salvarDividas();
+            showToast("Dívida atualizada com sucesso!", 'success');
+            cancelEdit();
+          }
+        } else {
+          // Criar nova dívida
+          if (currentRecordCount >= 999) {
+            showToast("Limite de 999 devedores atingido. Por favor, remova alguns registros primeiro.", 'warning');
+            btnSubmit.disabled = false;
+            btnText.textContent = originalText;
+            return;
+          }
+
+          const novaDivida = {
+            id: Date.now().toString(),
+            nome,
+            valor,
+            categoria,
+            status: "pendente",
+            data,
+            prazo: prazo || null,
+            observacoes,
+            criadoEm: new Date().toISOString()
+          };
+
+          dividas.push(novaDivida);
+          salvarDividas();
+          showToast(`${nome} registrado como devedor!`, 'success');
+          document.getElementById('form-devedor').reset();
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+        showToast("Erro ao processar a operação. Tente novamente.", 'danger');
+      } finally {
+        btnSubmit.disabled = false;
+        btnText.textContent = originalText;
+      }
+    }
+
+    function renderDividas() {
+      const container = document.getElementById('dividas-container');
+      
+      // Filtrar dívidas
+      let dividasFiltradas = [...dividas];
+      
+      if (filtroAtual === 'pendente') {
+        dividasFiltradas = dividasFiltradas.filter(d => d.status === 'pendente');
+      } else if (filtroAtual === 'pago') {
+        dividasFiltradas = dividasFiltradas.filter(d => d.status === 'pago');
+      } else if (filtroAtual === 'atrasada') {
+        dividasFiltradas = dividasFiltradas.filter(d => d.atrasada);
+      }
+      
+      if (categoriaFiltro) {
+        dividasFiltradas = dividasFiltradas.filter(d => d.categoria === categoriaFiltro);
+      }
+      
+      if (dividasFiltradas.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">💰</div>
+            <h3>${filtroAtual !== 'todos' || categoriaFiltro ? 'Nenhuma dívida encontrada' : 'Nenhuma dívida registrada'}</h3>
+            <p>${filtroAtual !== 'todos' || categoriaFiltro ? 'Tente mudar o filtro' : 'Adicione uma dívida usando o formulário acima'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Ordenar dívidas
+      dividasFiltradas.sort((a, b) => {
+        if (a.atrasada && !b.atrasada) return -1;
+        if (!a.atrasada && b.atrasada) return 1;
+        if (a.proximoVencimento && !b.proximoVencimento) return -1;
+        if (!a.proximoVencimento && b.proximoVencimento) return 1;
+        if (a.status !== b.status) {
+          return a.status === 'pendente' ? -1 : 1;
+        }
+        return new Date(b.criadoEm) - new Date(a.criadoEm);
+      });
+
+      container.innerHTML = dividasFiltradas.map(divida => {
+        const statusClass = divida.status === 'pago' ? 'pago' : '';
+        const atrasadaClass = divida.atrasada ? 'atrasada' : '';
+        const statusLabel = divida.status === 'pago' ? 'Pago' : 'Pendente';
+        let statusBadge = divida.status === 'pago' ? 'status-pago' : 'status-pendente';
+        
+        if (divida.atrasada) {
+          statusLabel = 'Atrasada';
+          statusBadge = 'status-atrasada';
+        }
+        
+        const dataFormatada = divida.data ? new Date(divida.data + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+        
+        // Calcular informações do prazo
+        let prazoInfo = '';
+        if (divida.data && divida.prazo && divida.status !== 'pago') {
+          const dataDivida = new Date(divida.data);
+          const dataVencimento = new Date(dataDivida);
+          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
+          
+          const agora = new Date();
+          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
+          
+          let prazoClass = 'prazo-normal';
+          let prazoTexto = '';
+          
+          if (diasAtraso > 0) {
+            prazoClass = 'prazo-atrasado';
+            prazoTexto = `⏰ Atrasada há ${diasAtraso} dia(s)`;
+          } else if (diasAtraso >= -3 && diasAtraso < 0) {
+            prazoClass = 'prazo-proximo';
+            prazoTexto = `⚠️ Vence em ${Math.abs(diasAtraso)} dia(s)`;
+          } else {
+            const diasRestantes = Math.abs(diasAtraso);
+            prazoTexto = `✓ Vence em ${diasRestantes} dia(s)`;
+          }
+          
+          const vencimentoFormatado = dataVencimento.toLocaleDateString('pt-BR');
+          prazoInfo = `<div class="prazo-info ${prazoClass}">
+            <span>📅 Vencimento: ${vencimentoFormatado}</span>
+            <span>${prazoTexto}</span>
+          </div>`;
+        }
+
+        return `
+          <div class="divida-item ${statusClass} ${atrasadaClass}" data-id="${divida.id}">
+            <div class="divida-info">
+              <h3 class="divida-nome">${divida.nome}</h3>
+              <div class="divida-detalhes">
+                <span class="categoria-badge categoria-${divida.categoria}">${getNomeCategoria(divida.categoria)}</span>
+                ${dataFormatada ? `<span>📅 Data: ${dataFormatada}</span>` : ''}
+                ${divida.prazo ? `<span>⏱️ Prazo: ${divida.prazo} dias</span>` : ''}
+                ${prazoInfo}
+                ${divida.observacoes ? `<span class="divida-observacoes">💬 ${divida.observacoes}</span>` : ''}
+              </div>
+            </div>
+            <p class="divida-valor">MT ${divida.valor.toFixed(2).replace('.', ',')}</p>
+            <span class="divida-status ${statusBadge}">${statusLabel}</span>
+            <div class="divida-actions">
+              ${divida.status === 'pendente' ? 
+                `<button class="btn btn-small btn-success" onclick="marcarComoPago('${divida.id}')">✅ Recebido</button>` :
+                `<button class="btn btn-small btn-warning" onclick="marcarComoPendente('${divida.id}')">↻ Repor</button>`
+              }
+              <button class="btn btn-small btn-edit" onclick="editarDivida('${divida.id}')">✎ Editar</button>
+              <button class="btn btn-small btn-info" onclick="enviarCobranca('${divida.id}')">📧 Cobrar</button>
+              <button class="btn btn-small btn-danger" onclick="removerDivida('${divida.id}')">✕ Remover</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function calcularTotal() {
+      const totalPendente = dividas
+        .filter(d => d.status === 'pendente')
+        .reduce((sum, d) => sum + d.valor, 0);
+      
+      document.getElementById('total-pendente').textContent = 
+        "MT " + totalPendente.toFixed(2).replace('.', ',');
+    }
+
+    async function marcarComoPago(id) {
+      const divida = dividas.find(d => d.id === id);
+      if (divida) {
+        divida.status = 'pago';
+        delete divida.atrasada;
+        delete divida.proximoVencimento;
+        
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>';
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        salvarDividas();
+        showToast(`✅ Valor de MT ${divida.valor.toFixed(2)} recebido de ${divida.nome}!`, 'success');
+        
+        btn.disabled = false;
+      }
+    }
+
+    async function marcarComoPendente(id) {
+      const divida = dividas.find(d => d.id === id);
+      if (divida) {
+        divida.status = 'pendente';
+        
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>';
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        salvarDividas();
+        showToast(`Dívida de ${divida.nome} restaurada como pendente.`, 'warning');
+        
+        btn.disabled = false;
+      }
+    }
+
+    function editarDivida(id) {
+      const divida = dividas.find(d => d.id === id);
+      if (divida) {
+        editingId = id;
+        document.getElementById('input-nome').value = divida.nome;
+        document.getElementById('input-valor').value = divida.valor;
+        document.getElementById('input-categoria').value = divida.categoria;
+        document.getElementById('input-data').value = divida.data || '';
+        document.getElementById('input-prazo').value = divida.prazo || '';
+        document.getElementById('input-observacoes').value = divida.observacoes || '';
+        
+        const btnText = document.getElementById('btn-text-adicionar');
+        btnText.textContent = 'Atualizar Dívida';
+        
+        document.getElementById('form-devedor').scrollIntoView({ behavior: 'smooth' });
+        showToast("Editando dívida. Altere os campos e clique em Atualizar.", 'info');
+      }
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      document.getElementById('form-devedor').reset();
+      const btnText = document.getElementById('btn-text-adicionar');
+      btnText.textContent = '➕ Registrar Dívida';
+    }
+
+    async function removerDivida(id) {
+      const divida = dividas.find(d => d.id === id);
+      if (!divida) return;
+      
+      if (!confirm(`Tem certeza que deseja remover a dívida de ${divida.nome}?`)) {
+        return;
+      }
+      
+      const item = document.querySelector('[data-id="' + id + '"]');
+      const btns = item?.querySelectorAll('button');
+      btns?.forEach(btn => btn.disabled = true);
+      
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      dividas = dividas.filter(d => d.id !== id);
+      salvarDividas();
+      showToast(`Dívida de ${divida.nome} removida!`, 'success');
+      
+      if (editingId === id) {
+        cancelEdit();
+      }
+    }
+
+    function enviarCobranca(id) {
+      const divida = dividas.find(d => d.id === id);
+      if (divida) {
+        // Criar mensagem de cobrança
+        let mensagem = `Olá ${divida.nome}, tudo bem?\n\n`;
+        mensagem += `Lembrando sobre o valor que você me deve:\n\n`;
+        mensagem += `💵 Valor: MT ${divida.valor.toFixed(2)}\n`;
+        
+        if (divida.categoria) {
+          mensagem += `📋 Motivo: ${getNomeCategoria(divida.categoria)}\n`;
+        }
+        
+        if (divida.data && divida.prazo) {
+          const dataDivida = new Date(divida.data);
+          const dataVencimento = new Date(dataDivida);
+          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
+          const vencimentoFormatado = dataVencimento.toLocaleDateString('pt-BR');
+          
+          const agora = new Date();
+          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
+          
+          mensagem += `📅 Vencimento: ${vencimentoFormatado}\n`;
+          
+          if (diasAtraso > 0) {
+            mensagem += `⏰ Status: Atrasada há ${diasAtraso} dia(s)\n`;
+          } else if (diasAtraso >= -3 && diasAtraso < 0) {
+            mensagem += `⚠️ Status: Vence em ${Math.abs(diasAtraso)} dia(s)\n`;
+          }
+        }
+        
+        if (divida.observacoes) {
+          mensagem += `📝 Detalhes: ${divida.observacoes}\n`;
+        }
+        
+        mensagem += `\nPor favor, entre em contato para acertarmos.\n`;
+        mensagem += `Agradeço!`;
+        
+        // Mostrar modal com opções para enviar
+        const modalBody = document.getElementById('modal-notificacoes-body');
+        modalBody.innerHTML = `
+          <h3>📧 Cobrar ${divida.nome}</h3>
+          <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+            <p><strong>Mensagem de cobrança:</strong></p>
+            <textarea id="mensagem-cobranca" style="width: 100%; height: 200px; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; margin: 0.5rem 0;">${mensagem}</textarea>
+            <p style="font-size: 0.875rem; color: #718096; margin: 0.5rem 0;">Personalize a mensagem antes de enviar</p>
+          </div>
+          <p><strong>Enviar por:</strong></p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+            <button class="btn btn-small btn-info" onclick="copiarMensagemCobranca()">📋 Copiar Mensagem</button>
+            <button class="btn btn-small btn-success" onclick="enviarPorWhatsAppCobranca()">📱 WhatsApp</button>
+            <button class="btn btn-small btn-primary" onclick="enviarPorEmailCobranca()">✉️ Email</button>
+            <button class="btn btn-small btn-warning" onclick="enviarPorSMSCobranca()">📞 SMS</button>
+          </div>
+          <div id="mensagem-copiada-cobranca" style="display: none; color: #48bb78; margin-top: 0.5rem;">
+            ✓ Mensagem copiada para a área de transferência!
+          </div>
+        `;
+        
+        abrirModal('modal-notificacoes');
+        
+        // Armazenar a mensagem atual globalmente para usar nas funções
+        window.mensagemCobrancaAtual = mensagem;
+        window.dividaCobrancaAtual = divida;
+      }
+    }
+
+    function copiarMensagemCobranca() {
+      const textarea = document.getElementById('mensagem-cobranca');
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+      
+      try {
+        navigator.clipboard.writeText(textarea.value);
+        document.getElementById('mensagem-copiada-cobranca').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('mensagem-copiada-cobranca').style.display = 'none';
+        }, 3000);
+      } catch (err) {
+        document.execCommand('copy');
+        document.getElementById('mensagem-copiada-cobranca').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('mensagem-copiada-cobranca').style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function enviarPorWhatsAppCobranca() {
+      const mensagem = encodeURIComponent(window.mensagemCobrancaAtual);
+      window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+      showToast("Abrindo WhatsApp com a mensagem de cobrança!", 'success');
+      fecharModal();
+    }
+
+    function enviarPorEmailCobranca() {
+      const divida = window.dividaCobrancaAtual;
+      const assunto = encodeURIComponent(`Lembrete de Pagamento - ${divida.nome}`);
+      const corpo = encodeURIComponent(window.mensagemCobrancaAtual);
+      window.open(`mailto:?subject=${assunto}&body=${corpo}`, '_blank');
+      showToast("Abrindo cliente de email!", 'success');
+      fecharModal();
+    }
+
+    function enviarPorSMSCobranca() {
+      const mensagem = encodeURIComponent(window.mensagemCobrancaAtual);
+      window.open(`sms:?body=${mensagem}`, '_blank');
+      showToast("Abrindo aplicativo de mensagens!", 'success');
+      fecharModal();
+    }
+
+    function mostrarNotificacoes() {
+      const notificacoes = verificarPrazos();
+      const modalBody = document.getElementById('modal-notificacoes-body');
+      
+      if (notificacoes.length === 0) {
+        modalBody.innerHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <h3 style="color: #48bb78;">Tudo em dia!</h3>
+            <p>Nenhuma cobrança pendente no momento.</p>
+          </div>
+        `;
+      } else {
+        let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+        html += '<p>📋 Dívidas que precisam de sua atenção:</p>';
+        
+        notificacoes.forEach(notif => {
+          const bgColor = notif.tipo === 'atrasada' ? '#fed7d7' : '#feebc8';
+          const borderColor = notif.tipo === 'atrasada' ? '#fc8181' : '#ed8936';
+          
+          html += `
+            <div style="border: 2px solid ${borderColor}; background: ${bgColor}; padding: 1rem; border-radius: 8px;">
+              <h4 style="margin: 0 0 0.5rem 0;">${notif.titulo}</h4>
+              <p style="margin: 0 0 0.5rem 0;">${notif.mensagem}</p>
+              <button class="btn btn-small btn-info" onclick="enviarCobranca('${notif.dividaId}')" style="margin-top: 0.5rem;">
+                📧 Enviar Cobrança
+              </button>
+            </div>
+          `;
+        });
+        
+        html += '</div>';
+        modalBody.innerHTML = html;
+      }
+      
+      abrirModal('modal-notificacoes');
+      
+      // Resetar badge
+      document.getElementById('notificacao-badge').style.display = 'none';
+      verificarPrazos(); // Recalcular para atualizar contador
+    }
+
+    function filtrarDividas(filtro) {
+      filtroAtual = filtro;
+      // Atualizar botões ativos
+      document.querySelectorAll('#filtros .btn').forEach(btn => {
+        btn.style.background = '';
+        btn.style.color = '';
+      });
+      event.target.style.background = '#667eea';
+      event.target.style.color = 'white';
+      renderDividas();
+    }
+
+    function filtrarPorCategoria(categoria) {
+      categoriaFiltro = categoria;
+      renderDividas();
+    }
+
+    function abrirModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal() {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        modal.style.display = 'none';
+      });
+      document.body.style.overflow = 'auto';
+    }
+
+    function showToast(message, type = 'info') {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Inicializar quando a página carregar
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Definir data atual como padrão
+    window.onload = function() {
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById('input-data').value = hoje;
+      
+      // Solicitar permissão para notificações
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('Permissão para notificações concedida');
+          }
+        });
+      }
+    };
+
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          fecharModal();
+        }
+      });
+    });
+  </script>
+ </body>
 </html>
-
