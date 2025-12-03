@@ -10,8 +10,10 @@
       margin: 0;
       padding: 0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100%;
+      min-height: 100vh;
       width: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     * {
@@ -20,9 +22,9 @@
 
     .app-container {
       width: 100%;
-      min-height: 100%;
+      flex: 1;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 2rem 1rem;
+      padding: 1rem;
     }
 
     .content-wrapper {
@@ -32,107 +34,266 @@
 
     .header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      padding-top: 1rem;
     }
 
     .header h1 {
       color: #ffffff;
-      font-size: 2.5rem;
+      font-size: 2rem;
       margin: 0 0 0.5rem 0;
       font-weight: 700;
     }
 
-    .card {
+    .header p {
+      color: rgba(255,255,255,0.8);
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Botão Flutuante */
+    .fab-button {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+    }
+
+    .fab-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Cards principais */
+    .main-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .form-section h2 {
-      color: #2d3748;
-      font-size: 1.5rem;
-      margin: 0 0 1.5rem 0;
-      font-weight: 600;
-    }
-
-    .form-grid {
+    .resumo-section {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
-      grid-template-columns: 1fr 1fr;
+      margin-bottom: 1.5rem;
+    }
+
+    .resumo-item {
+      background: #f7fafc;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      border: 2px solid #e2e8f0;
+    }
+
+    .resumo-valor {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #667eea;
+      margin: 0.5rem 0;
+    }
+
+    .resumo-label {
+      font-size: 0.8rem;
+      color: #718096;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .resumo-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .badge-danger {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    /* Lista de devedores */
+    .lista-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
     }
 
-    .form-group {
+    .lista-header h2 {
+      color: #2d3748;
+      font-size: 1.25rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .notificacao-badge {
+      background: #f56565;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .dividas-list {
       display: flex;
       flex-direction: column;
+      gap: 0.75rem;
     }
 
-    .form-group.full-width {
-      grid-column: 1 / -1;
+    .divida-item {
+      background: #f7fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem;
+      transition: all 0.2s;
     }
 
-    .form-group label {
-      color: #4a5568;
-      font-size: 0.875rem;
-      font-weight: 500;
+    .divida-item:hover {
+      border-color: #cbd5e0;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .divida-item.atrasada {
+      background: #fff5f5;
+      border-color: #fc8181;
+      animation: pulse-border 1.5s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: #fc8181; }
+      50% { border-color: #fed7d7; }
+    }
+
+    .divida-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       margin-bottom: 0.5rem;
     }
 
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 0.75rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
+    .divida-nome {
       font-size: 1rem;
-      font-family: inherit;
-      transition: border-color 0.2s;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 0;
     }
 
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #667eea;
+    .divida-valor {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #667eea;
+      margin: 0;
     }
 
-    .form-group textarea {
-      resize: vertical;
-      min-height: 60px;
+    .divida-item.atrasada .divida-valor {
+      color: #f56565;
+    }
+
+    .divida-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .divida-categoria {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .categoria-emprestimo { background: #bee3f8; color: #2c5282; }
+    .categoria-servico { background: #fed7d7; color: #c53030; }
+    .categoria-venda { background: #c6f6d5; color: #22543d; }
+    .categoria-outro { background: #e9d8fd; color: #553c9a; }
+
+    .divida-status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-pendente { background: #fed7d7; color: #c53030; }
+    .status-pago { background: #c6f6d5; color: #22543d; }
+    .status-atrasada { 
+      background: #fed7d7; 
+      color: #c53030;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .divida-detalhes {
+      color: #718096;
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .divida-observacoes {
+      color: #718096;
+      font-size: 0.75rem;
+      font-style: italic;
+      margin: 0.25rem 0;
+    }
+
+    .divida-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
     }
 
     .btn {
-      padding: 0.875rem 1.5rem;
+      padding: 0.5rem 0.75rem;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
       font-family: inherit;
     }
 
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
-      width: 100%;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-
     .btn-small {
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
     }
 
     .btn-success {
@@ -180,246 +341,38 @@
       background: #3182ce;
     }
 
-    .total-section {
-      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-      color: #ffffff;
-      padding: 1.5rem;
-      border-radius: 12px;
+    /* Footer */
+    .footer {
+      background: #2d3748;
+      color: #a0aec0;
+      padding: 1rem;
       text-align: center;
-      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
     }
 
-    .total-section h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1rem;
-      font-weight: 500;
-      opacity: 0.9;
-    }
-
-    .total-section .amount {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    .list-section h2 {
-      color: #2d3748;
-      font-size: 1.5rem;
-      margin: 0 0 1.5rem 0;
-      font-weight: 600;
-    }
-
-    .dividas-list {
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 1rem;
     }
 
-    .divida-item {
-      background: #f7fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 1.25rem;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr auto;
-      gap: 1.5rem;
+    .footer-stats {
+      display: flex;
+      gap: 1rem;
       align-items: center;
-      transition: all 0.2s;
-      min-height: 80px;
     }
 
-    .divida-item:hover {
-      border-color: #cbd5e0;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .divida-item.pago {
-      background: #f0fff4;
-      border-color: #9ae6b4;
-    }
-
-    .divida-item.atrasada {
-      background: #fff5f5;
-      border-color: #fc8181;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 101, 101, 0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(245, 101, 101, 0); }
-    }
-
-    .divida-header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .divida-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .divida-nome {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin: 0;
-    }
-
-    .divida-valor {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #667eea;
-      margin: 0;
-      text-align: center;
-    }
-
-    .divida-item.pago .divida-valor {
-      color: #48bb78;
-      text-decoration: line-through;
-    }
-
-    .divida-item.atrasada .divida-valor {
-      color: #f56565;
-    }
-
-    .divida-status {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      white-space: nowrap;
-      text-align: center;
-      min-width: 100px;
-    }
-
-    .status-pendente {
-      background: #fed7d7;
-      color: #c53030;
-    }
-
-    .status-pago {
-      background: #c6f6d5;
-      color: #22543d;
-    }
-
-    .status-atrasada {
-      background: #fed7d7;
-      color: #c53030;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    .divida-detalhes {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      color: #718096;
-      font-size: 0.75rem;
-    }
-
-    .divida-detalhes span {
+    .footer-stat {
       display: flex;
       align-items: center;
       gap: 0.25rem;
     }
 
-    .divida-observacoes {
-      color: #718096;
-      font-size: 0.75rem;
-      font-style: italic;
-      margin: 0;
-    }
-
-    .divida-actions {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: flex-end;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #718096;
-    }
-
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .empty-state h3 {
-      font-size: 1.25rem;
-      color: #4a5568;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .empty-state p {
-      margin: 0;
-      font-size: 0.875rem;
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #ffffff;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #2d3748;
-      color: #ffffff;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      animation: slideIn 0.3s ease-out;
-      z-index: 1000;
-    }
-
-    .toast.warning {
-      background: #ed8936;
-    }
-
-    .toast.danger {
-      background: #f56565;
-    }
-
-    .toast.success {
-      background: #48bb78;
-    }
-
-    .toast.info {
-      background: #4299e1;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
+    /* Modal */
     .modal {
       position: fixed;
       top: 0;
@@ -430,7 +383,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1001;
+      z-index: 1000;
       opacity: 0;
       animation: fadeIn 0.3s forwards;
     }
@@ -441,7 +394,7 @@
 
     .modal-content {
       background: white;
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 12px;
       max-width: 500px;
       width: 90%;
@@ -453,12 +406,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .modal-header h2 {
       margin: 0;
       color: #2d3748;
+      font-size: 1.25rem;
     }
 
     .close-modal {
@@ -470,205 +424,293 @@
     }
 
     .modal-body {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
-    .modal-footer {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-    }
-
-    .notificacao-badge {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: #f56565;
-      color: white;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 999;
-      animation: pulse 2s infinite;
-    }
-
-    .prazo-info {
+    .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 6px;
-      background: #f7fafc;
+      margin-bottom: 1rem;
     }
 
-    .prazo-proximo {
-      background: #feebc8;
-      color: #c05621;
-    }
-
-    .prazo-atrasado {
-      background: #fed7d7;
-      color: #c53030;
-    }
-
-    .prazo-normal {
-      background: #f0fff4;
-      color: #22543d;
-    }
-
-    .categoria-badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
+    .form-group label {
+      color: #4a5568;
+      font-size: 0.875rem;
       font-weight: 500;
-      margin-right: 0.5rem;
       margin-bottom: 0.25rem;
     }
 
-    .categoria-emprestimo { background: #bee3f8; color: #2c5282; }
-    .categoria-servico { background: #fed7d7; color: #c53030; }
-    .categoria-venda { background: #c6f6d5; color: #22543d; }
-    .categoria-outro { background: #e9d8fd; color: #553c9a; }
-
-    .estatisticas-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .estatistica-card {
-      background: #f7fafc;
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.75rem;
+      border: 2px solid #e2e8f0;
       border-radius: 8px;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .estatistica-valor {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #667eea;
-      margin: 0.5rem 0;
-    }
-
-    .estatistica-label {
       font-size: 0.875rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #2d3748;
+      color: #ffffff;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+      font-size: 0.875rem;
+    }
+
+    .toast.success {
+      background: #48bb78;
+    }
+
+    .toast.warning {
+      background: #ed8936;
+    }
+
+    .toast.danger {
+      background: #f56565;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
       color: #718096;
+    }
+
+    .empty-state-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 1rem;
+      color: #4a5568;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .empty-state p {
       margin: 0;
+      font-size: 0.75rem;
     }
 
     @media (max-width: 768px) {
+      .resumo-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
       .form-grid {
         grid-template-columns: 1fr;
       }
-
-      .divida-item {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-
-      .divida-valor {
-        text-align: left;
-      }
-
+      
       .divida-actions {
         flex-direction: column;
-        width: 100%;
       }
-
+      
       .divida-actions button {
         width: 100%;
       }
-
-      .modal-content {
-        width: 95%;
-        padding: 1rem;
+      
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
       }
+      
+      .footer-stats {
+        justify-content: center;
+      }
+      
+      .fab-button {
+        bottom: 70px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
 
-      .estatisticas-grid {
+    @media (max-width: 480px) {
+      .resumo-section {
         grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .main-card {
+        padding: 1rem;
       }
     }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
  </head>
  <body>
   <div class="app-container">
    <div class="content-wrapper">
     <header class="header">
-     <h1 id="titulo-principal">💰 Dívidas a Receber</h1>
-     <p style="color: rgba(255,255,255,0.8); margin: 0;">Controle do que as pessoas te devem</p>
+     <h1>💰 Dívidas a Receber</h1>
+     <p>Controle do que as pessoas te devem</p>
     </header>
-    
-    <!-- Botão de notificações -->
-    <div id="notificacao-badge" class="notificacao-badge" style="display: none;" onclick="mostrarNotificacoes()">0</div>
-    
-    <!-- Estatísticas -->
-    <div class="card">
-      <h2>📊 Resumo Financeiro</h2>
-      <div class="estatisticas-grid" id="estatisticas-container">
+
+    <!-- Resumo Financeiro -->
+    <div class="main-card">
+      <div class="resumo-section" id="resumo-container">
         <!-- Será preenchido pelo JavaScript -->
       </div>
     </div>
-    
-    <div class="card form-section">
-     <h2>➕ Adicionar Nova Dívida</h2>
-     <form id="form-devedor">
-      <div class="form-grid">
-       <div class="form-group"><label for="input-nome">Nome do Devedor</label> <input type="text" id="input-nome" required placeholder="Ex: Maria Santos">
-       </div>
-       <div class="form-group"><label for="input-valor">Valor que me Deve (MT)</label> <input type="number" id="input-valor" step="0.01" min="0" required placeholder="0,00">
-       </div>
-       <div class="form-group"><label for="input-categoria">Categoria da Dívida</label> 
-         <select id="input-categoria">
-           <option value="emprestimo">💰 Empréstimo de dinheiro</option>
-           <option value="servico">🔧 Serviço prestado</option>
-           <option value="venda">🛒 Venda de produto</option>
-           <option value="outro">📝 Outro</option>
-         </select>
-       </div>
-       <div class="form-group"><label for="input-data">Data da Dívida</label> <input type="date" id="input-data">
-       </div>
-       <div class="form-group"><label for="input-prazo">Prazo para Pagar (dias)</label> <input type="number" id="input-prazo" min="1" placeholder="Ex: 15 (opcional)">
-       </div>
-       <div class="form-group full-width"><label for="input-observacoes">Detalhes/Motivo</label> <textarea id="input-observacoes" placeholder="Ex: Pagamento pelo conserto do carro, Venda do celular..."></textarea>
-       </div>
-      </div><button type="submit" class="btn btn-primary" id="btn-submit"> <span id="btn-text-adicionar">➕ Registrar Dívida</span> </button>
-     </form>
-    </div>
-    <div class="total-section">
-     <h3 id="label-total">💰 Total a Receber (Pendente)</h3>
-     <p class="amount" id="total-pendente">MT 0,00</p>
-    </div>
-    <div class="card list-section">
-     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-       <h2>📋 Lista de Devedores</h2>
-       <button class="btn btn-small btn-info" onclick="mostrarNotificacoes()">🔔 Ver Cobranças ({notificacaoCount})</button>
-     </div>
-     <div id="filtros" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-       <button class="btn btn-small" onclick="filtrarDividas('todos')">Todos</button>
-       <button class="btn btn-small" onclick="filtrarDividas('pendente')">Pendentes</button>
-       <button class="btn btn-small" onclick="filtrarDividas('pago')">Pagas</button>
-       <button class="btn btn-small" onclick="filtrarDividas('atrasada')">Atrasadas</button>
-       <select class="btn btn-small" onchange="filtrarPorCategoria(this.value)" style="padding: 0.5rem;">
-         <option value="">Todas Categorias</option>
-         <option value="emprestimo">Empréstimo</option>
-         <option value="servico">Serviço</option>
-         <option value="venda">Venda</option>
-         <option value="outro">Outro</option>
-       </select>
-     </div>
-     <div id="dividas-container" class="dividas-list"></div>
+
+    <!-- Lista de Devedores -->
+    <div class="main-card">
+      <div class="lista-header">
+        <h2>📋 Devedores</h2>
+        <div id="notificacao-badge" class="notificacao-badge" style="display: none;" onclick="mostrarNotificacoes()">0</div>
+      </div>
+      
+      <div id="filtros" style="margin-bottom: 1rem; display: flex; gap: 0.25rem; flex-wrap: wrap;">
+        <button class="btn btn-small" onclick="filtrarDividas('todos')" style="background: #667eea; color: white;">Todos</button>
+        <button class="btn btn-small" onclick="filtrarDividas('pendente')">Pendentes</button>
+        <button class="btn btn-small" onclick="filtrarDividas('pago')">Recebidos</button>
+        <button class="btn btn-small" onclick="filtrarDividas('atrasada')">Atrasadas</button>
+      </div>
+      
+      <div id="dividas-container" class="dividas-list">
+        <!-- Lista de dívidas será inserida aqui -->
+      </div>
     </div>
    </div>
+  </div>
+
+  <!-- Botão Flutuante para Adicionar Dívida -->
+  <button class="fab-button" onclick="abrirModalAdicionar()">+</button>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-stats">
+        <span class="footer-stat">📊 <span id="footer-total">MT 0,00</span></span>
+        <span class="footer-stat">👤 <span id="footer-devedores">0</span> devedores</span>
+        <span class="footer-stat">⏰ <span id="footer-atrasadas">0</span> atrasadas</span>
+      </div>
+      <div>Controle de Dívidas © 2024</div>
+    </div>
+  </footer>
+
+  <!-- Modal para Adicionar/Editar Dívida -->
+  <div id="modal-divida" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-titulo">➕ Adicionar Nova Dívida</h2>
+        <button class="close-modal" onclick="fecharModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-devedor">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="input-nome">Nome do Devedor</label>
+              <input type="text" id="input-nome" required placeholder="Ex: Maria Santos">
+            </div>
+            <div class="form-group">
+              <label for="input-valor">Valor (MT)</label>
+              <input type="number" id="input-valor" step="0.01" min="0" required placeholder="0,00">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="input-categoria">Categoria</label>
+            <select id="input-categoria">
+              <option value="emprestimo">💰 Empréstimo</option>
+              <option value="servico">🔧 Serviço</option>
+              <option value="venda">🛒 Venda</option>
+              <option value="outro">📝 Outro</option>
+            </select>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="input-data">Data</label>
+              <input type="date" id="input-data">
+            </div>
+            <div class="form-group">
+              <label for="input-prazo">Prazo (dias)</label>
+              <input type="number" id="input-prazo" min="1" placeholder="Opcional">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="input-observacoes">Detalhes</label>
+            <textarea id="input-observacoes" placeholder="Ex: Conserto do carro, venda do celular..."></textarea>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" id="btn-submit">
+            <span id="btn-text-adicionar">➕ Adicionar Dívida</span>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- Modal de Notificações -->
@@ -681,55 +723,60 @@
       <div class="modal-body" id="modal-notificacoes-body">
         <!-- Conteúdo das notificações será inserido aqui -->
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Modal de Cobrança -->
+  <div id="modal-cobranca" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-cobranca-titulo">📧 Enviar Cobrança</h2>
+        <button class="close-modal" onclick="fecharModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-cobranca-body">
+        <!-- Conteúdo da cobrança será inserido aqui -->
       </div>
     </div>
   </div>
 
   <script>
     const STORAGE_KEY = 'dividas_a_receber';
-    let currentRecordCount = 0;
     let dividas = [];
     let editingId = null;
     let lembreteInterval;
     let filtroAtual = 'todos';
-    let categoriaFiltro = '';
 
-    // Solicitar permissão para notificações
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-
-    // Funções para gerenciar localStorage
-    function carregarDividas() {
-      const dados = localStorage.getItem(STORAGE_KEY);
-      if (dados) {
-        dividas = JSON.parse(dados);
-        currentRecordCount = dividas.length;
-      } else {
-        dividas = [];
-        currentRecordCount = 0;
-      }
-      renderDividas();
-      calcularTotal();
-      atualizarEstatisticas();
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarDividas();
       verificarPrazos();
       iniciarVerificacaoPrazos();
+      definirDataAtual();
+      
+      const form = document.getElementById('form-devedor');
+      form.addEventListener('submit', handleSubmit);
+    });
+
+    // Funções principais
+    function carregarDividas() {
+      const dados = localStorage.getItem(STORAGE_KEY);
+      dividas = dados ? JSON.parse(dados) : [];
+      atualizarInterface();
     }
 
     function salvarDividas() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dividas));
-      currentRecordCount = dividas.length;
-      renderDividas();
-      calcularTotal();
-      atualizarEstatisticas();
+      atualizarInterface();
       verificarPrazos();
     }
 
-    function atualizarEstatisticas() {
-      const container = document.getElementById('estatisticas-container');
-      
+    function atualizarInterface() {
+      atualizarResumo();
+      atualizarListaDividas();
+      atualizarFooter();
+    }
+
+    function atualizarResumo() {
       const totalPendente = dividas
         .filter(d => d.status === 'pendente')
         .reduce((sum, d) => sum + d.valor, 0);
@@ -738,240 +785,27 @@
         .filter(d => d.status === 'pago')
         .reduce((sum, d) => sum + d.valor, 0);
       
-      const totalGeral = dividas.reduce((sum, d) => sum + d.valor, 0);
-      
       const devedoresPendentes = dividas.filter(d => d.status === 'pendente').length;
       const devedoresAtrasados = dividas.filter(d => d.atrasada).length;
-      
-      container.innerHTML = `
-        <div class="estatistica-card">
-          <p class="estatistica-label">💰 A Receber</p>
-          <p class="estatistica-valor">MT ${totalPendente.toFixed(2).replace('.', ',')}</p>
+
+      document.getElementById('resumo-container').innerHTML = `
+        <div class="resumo-item">
+          <p class="resumo-label">💰 A Receber</p>
+          <p class="resumo-valor">MT ${totalPendente.toFixed(2).replace('.', ',')}</p>
+          ${devedoresAtrasados > 0 ? `<span class="resumo-badge badge-danger">${devedoresAtrasados} atrasadas</span>` : ''}
         </div>
-        <div class="estatistica-card">
-          <p class="estatistica-label">✅ Recebido</p>
-          <p class="estatistica-valor">MT ${totalRecebido.toFixed(2).replace('.', ',')}</p>
+        <div class="resumo-item">
+          <p class="resumo-label">✅ Recebido</p>
+          <p class="resumo-valor">MT ${totalRecebido.toFixed(2).replace('.', ',')}</p>
         </div>
-        <div class="estatistica-card">
-          <p class="estatistica-label">👤 Devedores</p>
-          <p class="estatistica-valor">${devedoresPendentes}</p>
-          ${devedoresAtrasados > 0 ? `<p style="color: #f56565; font-size: 0.75rem; margin: 0;">(${devedoresAtrasados} atrasados)</p>` : ''}
-        </div>
-        <div class="estatistica-card">
-          <p class="estatistica-label">📊 Total Geral</p>
-          <p class="estatistica-valor">MT ${totalGeral.toFixed(2).replace('.', ',')}</p>
+        <div class="resumo-item">
+          <p class="resumo-label">👤 Devedores</p>
+          <p class="resumo-valor">${devedoresPendentes}</p>
         </div>
       `;
     }
 
-    function iniciarVerificacaoPrazos() {
-      // Verificar prazos a cada 1 minuto
-      if (lembreteInterval) {
-        clearInterval(lembreteInterval);
-      }
-      lembreteInterval = setInterval(verificarPrazos, 60000); // 1 minuto
-    }
-
-    function verificarPrazos() {
-      const agora = new Date();
-      let notificacoesCount = 0;
-      const notificacoes = [];
-
-      dividas.forEach(divida => {
-        if (divida.status !== 'pago' && divida.data && divida.prazo) {
-          const dataDivida = new Date(divida.data);
-          const dataVencimento = new Date(dataDivida);
-          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
-          
-          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
-          
-          // Se está atrasada
-          if (diasAtraso > 0) {
-            divida.atrasada = true;
-            divida.diasAtraso = diasAtraso;
-            notificacoesCount++;
-            
-            // Criar notificação para dívida atrasada
-            notificacoes.push({
-              tipo: 'atrasada',
-              titulo: `⏰ Dívida Atrasada: ${divida.nome}`,
-              mensagem: `${divida.nome} te deve MT ${divida.valor.toFixed(2)} e está atrasada há ${diasAtraso} dia(s).`,
-              dividaId: divida.id
-            });
-          }
-          // Se vence em até 3 dias
-          else if (diasAtraso >= -3 && diasAtraso < 0) {
-            divida.proximoVencimento = true;
-            divida.diasRestantes = Math.abs(diasAtraso);
-            notificacoesCount++;
-            
-            // Criar notificação para vencimento próximo
-            notificacoes.push({
-              tipo: 'proximo',
-              titulo: `⚠️ Vencimento Próximo: ${divida.nome}`,
-              mensagem: `${divida.nome} deve te pagar MT ${divida.valor.toFixed(2)} em ${Math.abs(diasAtraso)} dia(s).`,
-              dividaId: divida.id
-            });
-          }
-        }
-      });
-
-      // Atualizar badge de notificações
-      const badge = document.getElementById('notificacao-badge');
-      if (notificacoesCount > 0) {
-        badge.textContent = notificacoesCount;
-        badge.style.display = 'flex';
-        
-        // Atualizar contador no botão
-        const botoesNotificacao = document.querySelectorAll('[onclick*="mostrarNotificacoes"]');
-        botoesNotificacao.forEach(botao => {
-          if (botao.textContent.includes('(')) {
-            botao.textContent = botao.textContent.replace(/\(\d+\)/, `(${notificacoesCount})`);
-          } else {
-            botao.textContent += ` (${notificacoesCount})`;
-          }
-        });
-      } else {
-        badge.style.display = 'none';
-        // Remover contador dos botões
-        const botoesNotificacao = document.querySelectorAll('[onclick*="mostrarNotificacoes"]');
-        botoesNotificacao.forEach(botao => {
-          botao.textContent = botao.textContent.replace(/ \(\d+\)/, '');
-        });
-      }
-
-      // Mostrar notificação do navegador se houver notificações atrasadas
-      if (notificacoes.length > 0 && 'Notification' in window && Notification.permission === 'granted') {
-        notificacoes.forEach(notif => {
-          if (notif.tipo === 'atrasada') {
-            new Notification(notif.titulo, {
-              body: notif.mensagem,
-              icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
-            });
-          }
-        });
-      }
-
-      return notificacoes;
-    }
-
-    async function init() {
-      carregarDividas();
-      
-      const form = document.getElementById('form-devedor');
-      form.addEventListener('submit', handleSubmit);
-    }
-
-    function getNomeCategoria(codigo) {
-      const categorias = {
-        'emprestimo': '💰 Empréstimo',
-        'servico': '🔧 Serviço',
-        'venda': '🛒 Venda',
-        'outro': '📝 Outro'
-      };
-      return categorias[codigo] || codigo;
-    }
-
-    async function handleSubmit(e) {
-      e.preventDefault();
-
-      const nome = document.getElementById('input-nome').value.trim();
-      const valor = parseFloat(document.getElementById('input-valor').value);
-      const categoria = document.getElementById('input-categoria').value;
-      const data = document.getElementById('input-data').value;
-      const prazo = document.getElementById('input-prazo').value;
-      const observacoes = document.getElementById('input-observacoes').value;
-
-      // Validação básica
-      if (!nome || isNaN(valor) || valor <= 0) {
-        showToast("Por favor, preencha o nome e um valor válido!", 'warning');
-        return;
-      }
-
-      const btnSubmit = document.getElementById('btn-submit');
-      const btnText = document.getElementById('btn-text-adicionar');
-      const originalText = btnText.textContent;
-
-      btnSubmit.disabled = true;
-      btnText.innerHTML = '<span class="loading-spinner"></span>';
-
-      // Pequeno delay para mostrar o spinner
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      try {
-        // Verificar se já existe uma dívida com o mesmo nome (case-insensitive)
-        const devedorExistente = dividas.find(d => 
-          d.nome.toLowerCase() === nome.toLowerCase() && d.id !== editingId
-        );
-
-        if (devedorExistente) {
-          // Atualizar dívida existente somando o valor
-          devedorExistente.valor += valor;
-          devedorExistente.categoria = categoria || devedorExistente.categoria;
-          devedorExistente.data = data || devedorExistente.data;
-          devedorExistente.prazo = prazo || devedorExistente.prazo;
-          devedorExistente.observacoes = observacoes || devedorExistente.observacoes;
-          devedorExistente.status = "pendente"; // Reativar se estava pago
-          delete devedorExistente.atrasada;
-          delete devedorExistente.proximoVencimento;
-
-          salvarDividas();
-          showToast(`${nome} já te devia! Valor atualizado para MT ${devedorExistente.valor.toFixed(2)}`, 'success');
-          document.getElementById('form-devedor').reset();
-          if (editingId) cancelEdit();
-        } else if (editingId) {
-          // Editando uma dívida existente
-          const divida = dividas.find(d => d.id === editingId);
-          if (divida) {
-            divida.nome = nome;
-            divida.valor = valor;
-            divida.categoria = categoria;
-            divida.data = data;
-            divida.prazo = prazo;
-            divida.observacoes = observacoes;
-            delete divida.atrasada;
-            delete divida.proximoVencimento;
-
-            salvarDividas();
-            showToast("Dívida atualizada com sucesso!", 'success');
-            cancelEdit();
-          }
-        } else {
-          // Criar nova dívida
-          if (currentRecordCount >= 999) {
-            showToast("Limite de 999 devedores atingido. Por favor, remova alguns registros primeiro.", 'warning');
-            btnSubmit.disabled = false;
-            btnText.textContent = originalText;
-            return;
-          }
-
-          const novaDivida = {
-            id: Date.now().toString(),
-            nome,
-            valor,
-            categoria,
-            status: "pendente",
-            data,
-            prazo: prazo || null,
-            observacoes,
-            criadoEm: new Date().toISOString()
-          };
-
-          dividas.push(novaDivida);
-          salvarDividas();
-          showToast(`${nome} registrado como devedor!`, 'success');
-          document.getElementById('form-devedor').reset();
-        }
-      } catch (error) {
-        console.error("Erro:", error);
-        showToast("Erro ao processar a operação. Tente novamente.", 'danger');
-      } finally {
-        btnSubmit.disabled = false;
-        btnText.textContent = originalText;
-      }
-    }
-
-    function renderDividas() {
+    function atualizarListaDividas() {
       const container = document.getElementById('dividas-container');
       
       // Filtrar dívidas
@@ -985,131 +819,208 @@
         dividasFiltradas = dividasFiltradas.filter(d => d.atrasada);
       }
       
-      if (categoriaFiltro) {
-        dividasFiltradas = dividasFiltradas.filter(d => d.categoria === categoriaFiltro);
-      }
-      
+      // Ordenar: atrasadas primeiro, depois pendentes, depois pagas
+      dividasFiltradas.sort((a, b) => {
+        if (a.atrasada && !b.atrasada) return -1;
+        if (!a.atrasada && b.atrasada) return 1;
+        if (a.status !== b.status) {
+          return a.status === 'pendente' ? -1 : 1;
+        }
+        return new Date(b.criadoEm || 0) - new Date(a.criadoEm || 0);
+      });
+
       if (dividasFiltradas.length === 0) {
         container.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">💰</div>
-            <h3>${filtroAtual !== 'todos' || categoriaFiltro ? 'Nenhuma dívida encontrada' : 'Nenhuma dívida registrada'}</h3>
-            <p>${filtroAtual !== 'todos' || categoriaFiltro ? 'Tente mudar o filtro' : 'Adicione uma dívida usando o formulário acima'}</p>
+            <h3>${filtroAtual !== 'todos' ? 'Nenhuma dívida encontrada' : 'Nenhuma dívida registrada'}</h3>
+            <p>${filtroAtual !== 'todos' ? 'Tente mudar o filtro' : 'Clique no botão "+" para adicionar'}</p>
           </div>
         `;
         return;
       }
 
-      // Ordenar dívidas
-      dividasFiltradas.sort((a, b) => {
-        if (a.atrasada && !b.atrasada) return -1;
-        if (!a.atrasada && b.atrasada) return 1;
-        if (a.proximoVencimento && !b.proximoVencimento) return -1;
-        if (!a.proximoVencimento && b.proximoVencimento) return 1;
-        if (a.status !== b.status) {
-          return a.status === 'pendente' ? -1 : 1;
-        }
-        return new Date(b.criadoEm) - new Date(a.criadoEm);
-      });
-
       container.innerHTML = dividasFiltradas.map(divida => {
-        const statusClass = divida.status === 'pago' ? 'pago' : '';
         const atrasadaClass = divida.atrasada ? 'atrasada' : '';
-        const statusLabel = divida.status === 'pago' ? 'Pago' : 'Pendente';
-        let statusBadge = divida.status === 'pago' ? 'status-pago' : 'status-pendente';
+        let statusLabel = divida.status === 'pago' ? 'Recebido' : 'Pendente';
+        let statusClass = divida.status === 'pago' ? 'status-pago' : 'status-pendente';
         
         if (divida.atrasada) {
           statusLabel = 'Atrasada';
-          statusBadge = 'status-atrasada';
+          statusClass = 'status-atrasada';
         }
-        
-        const dataFormatada = divida.data ? new Date(divida.data + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-        
-        // Calcular informações do prazo
-        let prazoInfo = '';
+
+        // Calcular dias de atraso se houver prazo
+        let diasInfo = '';
         if (divida.data && divida.prazo && divida.status !== 'pago') {
           const dataDivida = new Date(divida.data);
           const dataVencimento = new Date(dataDivida);
           dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
-          
           const agora = new Date();
           const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
           
-          let prazoClass = 'prazo-normal';
-          let prazoTexto = '';
-          
           if (diasAtraso > 0) {
-            prazoClass = 'prazo-atrasado';
-            prazoTexto = `⏰ Atrasada há ${diasAtraso} dia(s)`;
+            diasInfo = `<span style="color: #c53030;">⏰ ${diasAtraso} dia(s) atrasado</span>`;
           } else if (diasAtraso >= -3 && diasAtraso < 0) {
-            prazoClass = 'prazo-proximo';
-            prazoTexto = `⚠️ Vence em ${Math.abs(diasAtraso)} dia(s)`;
-          } else {
-            const diasRestantes = Math.abs(diasAtraso);
-            prazoTexto = `✓ Vence em ${diasRestantes} dia(s)`;
+            diasInfo = `<span style="color: #ed8936;">⚠️ Vence em ${Math.abs(diasAtraso)} dia(s)</span>`;
           }
-          
-          const vencimentoFormatado = dataVencimento.toLocaleDateString('pt-BR');
-          prazoInfo = `<div class="prazo-info ${prazoClass}">
-            <span>📅 Vencimento: ${vencimentoFormatado}</span>
-            <span>${prazoTexto}</span>
-          </div>`;
         }
 
         return `
-          <div class="divida-item ${statusClass} ${atrasadaClass}" data-id="${divida.id}">
-            <div class="divida-info">
+          <div class="divida-item ${atrasadaClass}" data-id="${divida.id}">
+            <div class="divida-header">
               <h3 class="divida-nome">${divida.nome}</h3>
-              <div class="divida-detalhes">
-                <span class="categoria-badge categoria-${divida.categoria}">${getNomeCategoria(divida.categoria)}</span>
-                ${dataFormatada ? `<span>📅 Data: ${dataFormatada}</span>` : ''}
-                ${divida.prazo ? `<span>⏱️ Prazo: ${divida.prazo} dias</span>` : ''}
-                ${prazoInfo}
-                ${divida.observacoes ? `<span class="divida-observacoes">💬 ${divida.observacoes}</span>` : ''}
-              </div>
+              <p class="divida-valor">MT ${divida.valor.toFixed(2).replace('.', ',')}</p>
             </div>
-            <p class="divida-valor">MT ${divida.valor.toFixed(2).replace('.', ',')}</p>
-            <span class="divida-status ${statusBadge}">${statusLabel}</span>
+            
+            <div class="divida-info">
+              <span class="divida-categoria categoria-${divida.categoria || 'outro'}">
+                ${getNomeCategoria(divida.categoria)}
+              </span>
+              <span class="divida-status ${statusClass}">${statusLabel}</span>
+            </div>
+            
+            <div class="divida-detalhes">
+              ${divida.data ? `<span>📅 ${new Date(divida.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>` : ''}
+              ${divida.prazo ? `<span>⏱️ ${divida.prazo} dias</span>` : ''}
+              ${diasInfo}
+              ${divida.observacoes ? `<p class="divida-observacoes">💬 ${divida.observacoes}</p>` : ''}
+            </div>
+            
             <div class="divida-actions">
               ${divida.status === 'pendente' ? 
-                `<button class="btn btn-small btn-success" onclick="marcarComoPago('${divida.id}')">✅ Recebido</button>` :
-                `<button class="btn btn-small btn-warning" onclick="marcarComoPendente('${divida.id}')">↻ Repor</button>`
+                `<button class="btn btn-success" onclick="marcarComoRecebido('${divida.id}')">✅ Recebido</button>` :
+                `<button class="btn btn-warning" onclick="marcarComoPendente('${divida.id}')">↻ Pendente</button>`
               }
-              <button class="btn btn-small btn-edit" onclick="editarDivida('${divida.id}')">✎ Editar</button>
-              <button class="btn btn-small btn-info" onclick="enviarCobranca('${divida.id}')">📧 Cobrar</button>
-              <button class="btn btn-small btn-danger" onclick="removerDivida('${divida.id}')">✕ Remover</button>
+              <button class="btn btn-info" onclick="enviarCobranca('${divida.id}')">📧 Cobrar</button>
+              <button class="btn btn-edit" onclick="editarDivida('${divida.id}')">✎ Editar</button>
+              <button class="btn btn-danger" onclick="removerDivida('${divida.id}')">✕</button>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    function calcularTotal() {
+    function atualizarFooter() {
       const totalPendente = dividas
         .filter(d => d.status === 'pendente')
         .reduce((sum, d) => sum + d.valor, 0);
       
-      document.getElementById('total-pendente').textContent = 
-        "MT " + totalPendente.toFixed(2).replace('.', ',');
+      const devedoresPendentes = dividas.filter(d => d.status === 'pendente').length;
+      const devedoresAtrasados = dividas.filter(d => d.atrasada).length;
+
+      document.getElementById('footer-total').textContent = `MT ${totalPendente.toFixed(2).replace('.', ',')}`;
+      document.getElementById('footer-devedores').textContent = devedoresPendentes;
+      document.getElementById('footer-atrasadas').textContent = devedoresAtrasados;
     }
 
-    async function marcarComoPago(id) {
+    // Funções de prazo e notificações
+    function iniciarVerificacaoPrazos() {
+      if (lembreteInterval) clearInterval(lembreteInterval);
+      lembreteInterval = setInterval(verificarPrazos, 60000);
+    }
+
+    function verificarPrazos() {
+      const agora = new Date();
+      let notificacoesCount = 0;
+
+      dividas.forEach(divida => {
+        if (divida.status !== 'pago' && divida.data && divida.prazo) {
+          const dataDivida = new Date(divida.data);
+          const dataVencimento = new Date(dataDivida);
+          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
+          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
+          
+          divida.atrasada = diasAtraso > 0;
+          if (divida.atrasada) {
+            notificacoesCount++;
+          }
+        }
+      });
+
+      // Atualizar badge
+      const badge = document.getElementById('notificacao-badge');
+      if (notificacoesCount > 0) {
+        badge.textContent = notificacoesCount;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      return notificacoesCount;
+    }
+
+    // Funções do formulário
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('input-nome').value.trim();
+      const valor = parseFloat(document.getElementById('input-valor').value);
+      const categoria = document.getElementById('input-categoria').value;
+      const data = document.getElementById('input-data').value;
+      const prazo = document.getElementById('input-prazo').value;
+      const observacoes = document.getElementById('input-observacoes').value;
+
+      if (!nome || isNaN(valor) || valor <= 0) {
+        showToast("Preencha nome e valor válido!", 'warning');
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text-adicionar');
+      const originalText = btnText.textContent;
+
+      btnSubmit.disabled = true;
+      btnText.innerHTML = '<span class="loading-spinner"></span>';
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      try {
+        if (editingId) {
+          // Editar dívida existente
+          const divida = dividas.find(d => d.id === editingId);
+          if (divida) {
+            Object.assign(divida, {
+              nome, valor, categoria, data, 
+              prazo: prazo || null, observacoes
+            });
+            delete divida.atrasada;
+            showToast("Dívida atualizada!", 'success');
+          }
+        } else {
+          // Nova dívida
+          const novaDivida = {
+            id: Date.now().toString(),
+            nome, valor, categoria,
+            status: "pendente",
+            data, prazo: prazo || null,
+            observacoes,
+            criadoEm: new Date().toISOString()
+          };
+          dividas.push(novaDivida);
+          showToast(`${nome} registrado como devedor!`, 'success');
+        }
+
+        salvarDividas();
+        fecharModal();
+        document.getElementById('form-devedor').reset();
+        editingId = null;
+      } catch (error) {
+        showToast("Erro ao salvar!", 'danger');
+      } finally {
+        btnSubmit.disabled = false;
+        btnText.textContent = originalText;
+      }
+    }
+
+    // Funções de ação
+    async function marcarComoRecebido(id) {
       const divida = dividas.find(d => d.id === id);
       if (divida) {
         divida.status = 'pago';
         delete divida.atrasada;
-        delete divida.proximoVencimento;
-        
-        const btn = event.target;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="loading-spinner"></span>';
-        
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
         salvarDividas();
-        showToast(`✅ Valor de MT ${divida.valor.toFixed(2)} recebido de ${divida.nome}!`, 'success');
-        
-        btn.disabled = false;
+        showToast(`✅ MT ${divida.valor.toFixed(2)} recebido de ${divida.nome}!`, 'success');
       }
     }
 
@@ -1117,17 +1028,8 @@
       const divida = dividas.find(d => d.id === id);
       if (divida) {
         divida.status = 'pendente';
-        
-        const btn = event.target;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="loading-spinner"></span>';
-        
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
         salvarDividas();
         showToast(`Dívida de ${divida.nome} restaurada como pendente.`, 'warning');
-        
-        btn.disabled = false;
       }
     }
 
@@ -1135,141 +1037,108 @@
       const divida = dividas.find(d => d.id === id);
       if (divida) {
         editingId = id;
+        document.getElementById('modal-titulo').textContent = '✎ Editar Dívida';
+        document.getElementById('btn-text-adicionar').textContent = '💾 Salvar Alterações';
+        
         document.getElementById('input-nome').value = divida.nome;
         document.getElementById('input-valor').value = divida.valor;
-        document.getElementById('input-categoria').value = divida.categoria;
+        document.getElementById('input-categoria').value = divida.categoria || 'emprestimo';
         document.getElementById('input-data').value = divida.data || '';
         document.getElementById('input-prazo').value = divida.prazo || '';
         document.getElementById('input-observacoes').value = divida.observacoes || '';
         
-        const btnText = document.getElementById('btn-text-adicionar');
-        btnText.textContent = 'Atualizar Dívida';
-        
-        document.getElementById('form-devedor').scrollIntoView({ behavior: 'smooth' });
-        showToast("Editando dívida. Altere os campos e clique em Atualizar.", 'info');
+        abrirModal('modal-divida');
       }
     }
 
-    function cancelEdit() {
+    function abrirModalAdicionar() {
       editingId = null;
+      document.getElementById('modal-titulo').textContent = '➕ Adicionar Nova Dívida';
+      document.getElementById('btn-text-adicionar').textContent = '➕ Adicionar Dívida';
       document.getElementById('form-devedor').reset();
-      const btnText = document.getElementById('btn-text-adicionar');
-      btnText.textContent = '➕ Registrar Dívida';
+      definirDataAtual();
+      abrirModal('modal-divida');
     }
 
     async function removerDivida(id) {
       const divida = dividas.find(d => d.id === id);
       if (!divida) return;
       
-      if (!confirm(`Tem certeza que deseja remover a dívida de ${divida.nome}?`)) {
-        return;
-      }
-      
-      const item = document.querySelector('[data-id="' + id + '"]');
-      const btns = item?.querySelectorAll('button');
-      btns?.forEach(btn => btn.disabled = true);
-      
-      await new Promise(resolve => setTimeout(resolve, 300));
+      if (!confirm(`Remover dívida de ${divida.nome}?`)) return;
       
       dividas = dividas.filter(d => d.id !== id);
+      if (editingId === id) editingId = null;
       salvarDividas();
-      showToast(`Dívida de ${divida.nome} removida!`, 'success');
-      
-      if (editingId === id) {
-        cancelEdit();
-      }
+      showToast(`Dívida removida!`, 'success');
     }
 
+    // Funções de cobrança
     function enviarCobranca(id) {
       const divida = dividas.find(d => d.id === id);
-      if (divida) {
-        // Criar mensagem de cobrança
-        let mensagem = `Olá ${divida.nome}, tudo bem?\n\n`;
-        mensagem += `Lembrando sobre o valor que você me deve:\n\n`;
-        mensagem += `💵 Valor: MT ${divida.valor.toFixed(2)}\n`;
-        
-        if (divida.categoria) {
-          mensagem += `📋 Motivo: ${getNomeCategoria(divida.categoria)}\n`;
-        }
-        
-        if (divida.data && divida.prazo) {
-          const dataDivida = new Date(divida.data);
-          const dataVencimento = new Date(dataDivida);
-          dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
-          const vencimentoFormatado = dataVencimento.toLocaleDateString('pt-BR');
-          
-          const agora = new Date();
-          const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
-          
-          mensagem += `📅 Vencimento: ${vencimentoFormatado}\n`;
-          
-          if (diasAtraso > 0) {
-            mensagem += `⏰ Status: Atrasada há ${diasAtraso} dia(s)\n`;
-          } else if (diasAtraso >= -3 && diasAtraso < 0) {
-            mensagem += `⚠️ Status: Vence em ${Math.abs(diasAtraso)} dia(s)\n`;
-          }
-        }
-        
-        if (divida.observacoes) {
-          mensagem += `📝 Detalhes: ${divida.observacoes}\n`;
-        }
-        
-        mensagem += `\nPor favor, entre em contato para acertarmos.\n`;
-        mensagem += `Agradeço!`;
-        
-        // Mostrar modal com opções para enviar
-        const modalBody = document.getElementById('modal-notificacoes-body');
-        modalBody.innerHTML = `
-          <h3>📧 Cobrar ${divida.nome}</h3>
-          <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-            <p><strong>Mensagem de cobrança:</strong></p>
-            <textarea id="mensagem-cobranca" style="width: 100%; height: 200px; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; margin: 0.5rem 0;">${mensagem}</textarea>
-            <p style="font-size: 0.875rem; color: #718096; margin: 0.5rem 0;">Personalize a mensagem antes de enviar</p>
-          </div>
-          <p><strong>Enviar por:</strong></p>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
-            <button class="btn btn-small btn-info" onclick="copiarMensagemCobranca()">📋 Copiar Mensagem</button>
-            <button class="btn btn-small btn-success" onclick="enviarPorWhatsAppCobranca()">📱 WhatsApp</button>
-            <button class="btn btn-small btn-primary" onclick="enviarPorEmailCobranca()">✉️ Email</button>
-            <button class="btn btn-small btn-warning" onclick="enviarPorSMSCobranca()">📞 SMS</button>
-          </div>
-          <div id="mensagem-copiada-cobranca" style="display: none; color: #48bb78; margin-top: 0.5rem;">
-            ✓ Mensagem copiada para a área de transferência!
-          </div>
-        `;
-        
-        abrirModal('modal-notificacoes');
-        
-        // Armazenar a mensagem atual globalmente para usar nas funções
-        window.mensagemCobrancaAtual = mensagem;
-        window.dividaCobrancaAtual = divida;
+      if (!divida) return;
+
+      let mensagem = `Olá ${divida.nome}, tudo bem?\n\n`;
+      mensagem += `Lembrando sobre o valor que você me deve:\n\n`;
+      mensagem += `💵 Valor: MT ${divida.valor.toFixed(2)}\n`;
+      mensagem += `📋 Motivo: ${getNomeCategoria(divida.categoria)}\n`;
+      
+      if (divida.data) {
+        const dataFormatada = new Date(divida.data + 'T00:00:00').toLocaleDateString('pt-BR');
+        mensagem += `📅 Data: ${dataFormatada}\n`;
       }
+      
+      if (divida.atrasada && divida.data && divida.prazo) {
+        const dataDivida = new Date(divida.data);
+        const dataVencimento = new Date(dataDivida);
+        dataVencimento.setDate(dataVencimento.getDate() + parseInt(divida.prazo));
+        const agora = new Date();
+        const diasAtraso = Math.floor((agora - dataVencimento) / (1000 * 60 * 60 * 24));
+        mensagem += `⏰ Atraso: ${diasAtraso} dia(s)\n`;
+      }
+      
+      if (divida.observacoes) {
+        mensagem += `📝 Detalhes: ${divida.observacoes}\n`;
+      }
+      
+      mensagem += `\nPor favor, entre em contato para acertarmos.\nAgradeço!`;
+
+      window.mensagemCobrancaAtual = mensagem;
+      window.dividaCobrancaAtual = divida;
+
+      document.getElementById('modal-cobranca-titulo').textContent = `📧 Cobrar ${divida.nome}`;
+      document.getElementById('modal-cobranca-body').innerHTML = `
+        <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <p><strong>Mensagem pronta:</strong></p>
+          <textarea id="mensagem-cobranca" style="width: 100%; height: 150px; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; margin: 0.5rem 0; font-size: 0.875rem;">${mensagem}</textarea>
+          <p style="font-size: 0.75rem; color: #718096;">Personalize se necessário</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-info" onclick="copiarMensagemCobranca()" style="flex: 1;">📋 Copiar</button>
+          <button class="btn btn-success" onclick="enviarPorWhatsAppCobranca()" style="flex: 1;">📱 WhatsApp</button>
+          <button class="btn btn-primary" onclick="enviarPorEmailCobranca()" style="flex: 1;">✉️ Email</button>
+        </div>
+        <div id="mensagem-copiada" style="display: none; color: #48bb78; font-size: 0.75rem; margin-top: 0.5rem;">
+          ✓ Mensagem copiada!
+        </div>
+      `;
+
+      abrirModal('modal-cobranca');
     }
 
     function copiarMensagemCobranca() {
       const textarea = document.getElementById('mensagem-cobranca');
       textarea.select();
-      textarea.setSelectionRange(0, 99999);
-      
-      try {
-        navigator.clipboard.writeText(textarea.value);
-        document.getElementById('mensagem-copiada-cobranca').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('mensagem-copiada-cobranca').style.display = 'none';
-        }, 3000);
-      } catch (err) {
-        document.execCommand('copy');
-        document.getElementById('mensagem-copiada-cobranca').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('mensagem-copiada-cobranca').style.display = 'none';
-        }, 3000);
-      }
+      navigator.clipboard.writeText(textarea.value).then(() => {
+        const msg = document.getElementById('mensagem-copiada');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 2000);
+      });
     }
 
     function enviarPorWhatsAppCobranca() {
       const mensagem = encodeURIComponent(window.mensagemCobrancaAtual);
       window.open(`https://wa.me/?text=${mensagem}`, '_blank');
-      showToast("Abrindo WhatsApp com a mensagem de cobrança!", 'success');
+      showToast("Abrindo WhatsApp!", 'success');
       fecharModal();
     }
 
@@ -1278,133 +1147,78 @@
       const assunto = encodeURIComponent(`Lembrete de Pagamento - ${divida.nome}`);
       const corpo = encodeURIComponent(window.mensagemCobrancaAtual);
       window.open(`mailto:?subject=${assunto}&body=${corpo}`, '_blank');
-      showToast("Abrindo cliente de email!", 'success');
+      showToast("Abrindo email!", 'success');
       fecharModal();
     }
 
-    function enviarPorSMSCobranca() {
-      const mensagem = encodeURIComponent(window.mensagemCobrancaAtual);
-      window.open(`sms:?body=${mensagem}`, '_blank');
-      showToast("Abrindo aplicativo de mensagens!", 'success');
-      fecharModal();
+    // Funções auxiliares
+    function getNomeCategoria(codigo) {
+      const categorias = {
+        'emprestimo': '💰 Empréstimo',
+        'servico': '🔧 Serviço',
+        'venda': '🛒 Venda',
+        'outro': '📝 Outro'
+      };
+      return categorias[codigo] || '📝 Outro';
     }
 
-    function mostrarNotificacoes() {
-      const notificacoes = verificarPrazos();
-      const modalBody = document.getElementById('modal-notificacoes-body');
-      
-      if (notificacoes.length === 0) {
-        modalBody.innerHTML = `
-          <div style="text-align: center; padding: 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
-            <h3 style="color: #48bb78;">Tudo em dia!</h3>
-            <p>Nenhuma cobrança pendente no momento.</p>
-          </div>
-        `;
-      } else {
-        let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
-        html += '<p>📋 Dívidas que precisam de sua atenção:</p>';
-        
-        notificacoes.forEach(notif => {
-          const bgColor = notif.tipo === 'atrasada' ? '#fed7d7' : '#feebc8';
-          const borderColor = notif.tipo === 'atrasada' ? '#fc8181' : '#ed8936';
-          
-          html += `
-            <div style="border: 2px solid ${borderColor}; background: ${bgColor}; padding: 1rem; border-radius: 8px;">
-              <h4 style="margin: 0 0 0.5rem 0;">${notif.titulo}</h4>
-              <p style="margin: 0 0 0.5rem 0;">${notif.mensagem}</p>
-              <button class="btn btn-small btn-info" onclick="enviarCobranca('${notif.dividaId}')" style="margin-top: 0.5rem;">
-                📧 Enviar Cobrança
-              </button>
-            </div>
-          `;
-        });
-        
-        html += '</div>';
-        modalBody.innerHTML = html;
+    function definirDataAtual() {
+      const hoje = new Date().toISOString().split('T')[0];
+      if (!editingId) {
+        document.getElementById('input-data').value = hoje;
       }
-      
-      abrirModal('modal-notificacoes');
-      
-      // Resetar badge
-      document.getElementById('notificacao-badge').style.display = 'none';
-      verificarPrazos(); // Recalcular para atualizar contador
     }
 
     function filtrarDividas(filtro) {
       filtroAtual = filtro;
-      // Atualizar botões ativos
-      document.querySelectorAll('#filtros .btn').forEach(btn => {
-        btn.style.background = '';
-        btn.style.color = '';
-      });
-      event.target.style.background = '#667eea';
-      event.target.style.color = 'white';
-      renderDividas();
+      atualizarListaDividas();
     }
 
-    function filtrarPorCategoria(categoria) {
-      categoriaFiltro = categoria;
-      renderDividas();
+    function mostrarNotificacoes() {
+      const notificacoesCount = verificarPrazos();
+      document.getElementById('modal-notificacoes-body').innerHTML = `
+        <div style="text-align: center; padding: 1rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">${notificacoesCount > 0 ? '🔔' : '✅'}</div>
+          <h3 style="color: #2d3748; margin: 0 0 0.5rem 0;">${notificacoesCount > 0 ? 'Cobranças Pendentes' : 'Tudo em dia!'}</h3>
+          <p>${notificacoesCount > 0 ? `${notificacoesCount} dívida(s) atrasada(s)` : 'Nenhuma cobrança pendente'}</p>
+        </div>
+      `;
+      abrirModal('modal-notificacoes');
     }
 
     function abrirModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.style.display = 'flex';
+      document.getElementById(modalId).style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
 
     function fecharModal() {
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
+      document.querySelectorAll('.modal').forEach(modal => {
         modal.style.display = 'none';
       });
       document.body.style.overflow = 'auto';
+      editingId = null;
     }
 
     function showToast(message, type = 'info') {
-      const existingToast = document.querySelector('.toast');
-      if (existingToast) {
-        existingToast.remove();
-      }
-
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
       toast.textContent = message;
       document.body.appendChild(toast);
 
-      setTimeout(() => {
-        toast.remove();
-      }, 3000);
+      setTimeout(() => toast.remove(), 3000);
     }
 
-    // Inicializar quando a página carregar
-    document.addEventListener('DOMContentLoaded', init);
-
-    // Definir data atual como padrão
-    window.onload = function() {
-      const hoje = new Date().toISOString().split('T')[0];
-      document.getElementById('input-data').value = hoje;
-      
-      // Solicitar permissão para notificações
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('Permissão para notificações concedida');
-          }
-        });
-      }
-    };
-
     // Fechar modal ao clicar fora
-    window.addEventListener('click', function(event) {
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        if (event.target === modal) {
-          fecharModal();
-        }
-      });
+    window.addEventListener('click', (event) => {
+      if (event.target.classList.contains('modal')) {
+        fecharModal();
+      }
     });
+
+    // Solicitar permissão para notificações
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
   </script>
  </body>
 </html>
